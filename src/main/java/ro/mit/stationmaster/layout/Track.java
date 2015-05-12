@@ -5,33 +5,33 @@ package ro.mit.stationmaster.layout;
  */
 public class Track {
 
-    private int trackNumber;
-    private int trackSpeed;
+    private int number;
+    private int speed;
     private String direction;
 
     public Track(int trackNumber, int trackSpeed, String direction) {
-        this.trackNumber = trackNumber;
-        this.trackSpeed = trackSpeed;
+        this.number = trackNumber;
+        this.speed = trackSpeed;
         this.direction = direction;
     }
 
     public Track() {
     }
 
-    public int getTrackNumber() {
-        return trackNumber;
+    public int getNumber() {
+        return number;
     }
 
-    public void setTrackNumber(int trackNumber) {
-        this.trackNumber = trackNumber;
+    public void setNumber(int number) {
+        this.number = number;
     }
 
-    public int getTrackSpeed() {
-        return trackSpeed;
+    public int getSpeed() {
+        return speed;
     }
 
-    public void setTrackSpeed(int trackSpeed) {
-        this.trackSpeed = trackSpeed;
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 
     public String getDirection() {
