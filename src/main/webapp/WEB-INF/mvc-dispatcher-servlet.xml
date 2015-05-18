@@ -12,8 +12,13 @@
 
     <context:component-scan base-package="ro.mit.stationmaster.controller"/>
     <mvc:annotation-driven />
-    <!---->
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+
     <bean class="ro.mit.stationmaster.utils.SerialComm" init-method="initialize" destroy-method="close" lazy-init="false"/>
+
+    <bean class="ro.mit.stationmaster.layout.ArduinoMessageDispatcher" lazy-init="false"/>
+
+    <bean class="ro.mit.stationmaster.layout.LayoutObserver" lazy-init="false"/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/pages/"/>

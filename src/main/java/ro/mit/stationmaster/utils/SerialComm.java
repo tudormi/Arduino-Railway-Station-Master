@@ -4,6 +4,8 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import ro.mit.stationmaster.layout.ArduinoMessageDispatcher;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,11 +17,14 @@ import java.util.Enumeration;
  */
 public class SerialComm implements SerialPortEventListener {
 
+    @Autowired
+    ArduinoMessageDispatcher arduinoMessageDispatcher;
+
     SerialPort serialPort = null;
 
     private static final String PORT_NAMES[] = {"COM3"};
 
-    private String appName;
+    private static final String appName = "StationMaster";
     private BufferedReader input;
     private OutputStream output;
 
@@ -99,6 +104,7 @@ public class SerialComm implements SerialPortEventListener {
                         input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
                     }
                     String inputLine = input.readLine();
+//                    arduinoMessageDispatcher.parseMessage(inputLine);
                     System.out.println(inputLine);
                     break;
 
@@ -110,9 +116,6 @@ public class SerialComm implements SerialPortEventListener {
         }
     }
 
-//    public ArduinoTest1() {
-//        appName = getClass().getName();
-//    }
 
 //    public static void main(String[] args) throws Exception {
 //        ArduinoTest1 test = new ArduinoTest1();

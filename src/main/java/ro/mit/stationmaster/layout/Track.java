@@ -8,6 +8,7 @@ public class Track {
     private int number;
     private int speed;
     private String direction;
+    private String state;
 
     public Track(int trackNumber, int trackSpeed, String direction) {
         this.number = trackNumber;
@@ -16,6 +17,13 @@ public class Track {
     }
 
     public Track() {
+    }
+
+    public Track(int number, int speed, String direction, String state) {
+        this.number = number;
+        this.speed = speed;
+        this.direction = direction;
+        this.state = state;
     }
 
     public int getNumber() {
@@ -40,5 +48,13 @@ public class Track {
 
     public void setDirection(String direction) {
         this.direction = direction;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }
