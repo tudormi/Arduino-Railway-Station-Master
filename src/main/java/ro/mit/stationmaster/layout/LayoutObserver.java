@@ -1,5 +1,7 @@
 package ro.mit.stationmaster.layout;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import ro.mit.stationmaster.dto.TrackDTO;
 import java.util.ArrayList;
@@ -8,6 +10,8 @@ import java.util.ArrayList;
  * Created by Tudormi on 15/5/2015.
  */
 public class LayoutObserver {
+
+    private final static Logger logger = LogManager.getLogger(LayoutObserver.class);
 
     @Autowired
     ArduinoMessageDispatcher arduinoMessageDispatcher;
@@ -30,6 +34,9 @@ public class LayoutObserver {
 
     /* singurul update venit de la Arduino momentan */
     public void updateLayoutFromArduino(IRSensor sensor) {
+        /* daca linia este ocupata si macazele nu au fost facute pentru parasirea liniei
+         * atunci cand unul din senzori este activat trenul sa se mai poate misca in
+          * directia care se misca in acel moment*/
         tracks.get(sensor.getLineNumber() - 1).setState(sensor.getType());
     }
 
@@ -40,8 +47,9 @@ public class LayoutObserver {
 //        System.out.println(trackDTO.getNumber());
 //        System.out.println(trackDTO.getSpeed());
         int lineNumber = trackDTO.getNumber();
-        tracks.get(lineNumber).setSpeed(trackDTO.getSpeed());
-        tracks.get(lineNumber).setDirection(trackDTO.getDirection());
+        logger.info("Linia: " + lineNumber + " , viteza: " + trackDTO.getSpeed());
+        tracks.get(lineNumber-1).setSpeed(trackDTO.getSpeed());
+        tracks.get(lineNumber-1).setDirection(trackDTO.getDirection());
     }
 
     public int checkCommandValidity(TrackDTO trackDTO) {
@@ -66,6 +74,7 @@ public class LayoutObserver {
             arduinoMessageDispatcher.sendTrackMessage(trackDTO);
         }
         updateLayout(trackDTO);
+
         return 1;
     }
 
@@ -73,6 +82,9 @@ public class LayoutObserver {
         /**
          * nu se poate pune un macaz ce ar duce catre o linie ocupata
          */
+
+
+
         return 1;
     }
 
@@ -80,6 +92,7 @@ public class LayoutObserver {
         /**
          * nu se poate pune un semnal pe liber daca linia este deja ocupata
          */
+
         return 1;
     }
 

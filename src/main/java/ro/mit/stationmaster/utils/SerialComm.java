@@ -104,7 +104,7 @@ public class SerialComm implements SerialPortEventListener {
                         input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
                     }
                     String inputLine = input.readLine();
-//                    arduinoMessageDispatcher.parseMessage(inputLine);
+//                    arduinoMessageDispatcher.parseMessageFromArduino(inputLine);
                     System.out.println(inputLine);
                     break;
 
@@ -115,20 +115,5 @@ public class SerialComm implements SerialPortEventListener {
             System.err.println(e.toString());
         }
     }
-
-
-//    public static void main(String[] args) throws Exception {
-//        ArduinoTest1 test = new ArduinoTest1();
-//        if ( test.initialize() ) {
-//            test.sendData("y");
-//            try { Thread.sleep(2000); } catch (InterruptedException ie) {}
-//            test.sendData("n");
-//            try { Thread.sleep(2000); } catch (InterruptedException ie) {}
-//            test.close();
-//        }
-//
-//        // Wait 5 seconds then shutdown
-//        try { Thread.sleep(2000); } catch (InterruptedException ie) {}
-//    }
 }
 

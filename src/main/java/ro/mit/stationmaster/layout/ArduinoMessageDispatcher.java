@@ -1,5 +1,7 @@
 package ro.mit.stationmaster.layout;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import ro.mit.stationmaster.dto.TrackDTO;
@@ -11,23 +13,24 @@ import ro.mit.stationmaster.utils.SerialComm;
 
 public class ArduinoMessageDispatcher {
 
+    private final static Logger logger = LogManager.getLogger(LayoutObserver.class);
+
     @Autowired
     LayoutObserver layoutObserver;
 
     @Autowired
     SerialComm serialComm;
 
-    public void parseMessage(String message) {
-        //parse message and see what object will be
-        System.out.println(message);
-        JSONObject jsonObject = new JSONObject(message);
-        System.out.println(jsonObject.get("track"));
-        System.out.println(jsonObject.get("type"));
+    public void parseMessageFromArduino(String message) {
+        logger.info(message);
+//        JSONObject jsonObject = new JSONObject(message);
+//        String type = jsonObject.getString("type");
+//        System.out.println(jsonObject.getString("type"));
+//        jsonObject = jsonObject.getJSONObject(type);
         parseSensorkMessage(message);
     }
 
     public void parseSensorkMessage(String message) {
-        //parse message and populate track object then call updateLayout
         IRSensor irSensor = new IRSensor();
         JSONObject jsonObject = new JSONObject(message);
         irSensor.setLineNumber(jsonObject.getInt("track"));
@@ -36,7 +39,18 @@ public class ArduinoMessageDispatcher {
     }
 
     public void sendTrackMessage(TrackDTO trackDTO){
-        serialComm.sendData("{\"type\": \"line\",\"line\":{\"number\":"+trackDTO.getNumber() +",\"speed\":"+ trackDTO.getSpeed() +",\"direction\":\""+trackDTO.getDirection()+"\"}}");
+        StringBuilder command = new StringBuilder();
+        command.append("{\"type\": \"line\",");
+        command.append("\"line\":{\"number\":");
+        command.append(trackDTO.getNumber());
+        command.append(",\"speed\":");
+        command.append(trackDTO.getSpeed());
+        command.append(",\"direction\":\"");
+        command.append(trackDTO.getDirection());
+        command.append("\"}}");
+        System.out.println(command.toString());
+        System.out.println("{\"type\": \"line\",\"line\":{\"number\":" + trackDTO.getNumber() + ",\"speed\":" + trackDTO.getSpeed() + ",\"direction\":\"" + trackDTO.getDirection()+"\"}}");
+        serialComm.sendData("{\"type\": \"line\",\"line\":{\"number\":" + trackDTO.getNumber() + ",\"speed\":" + trackDTO.getSpeed() + ",\"direction\":\"" + trackDTO.getDirection()+"\"}}");
     }
 
 }
