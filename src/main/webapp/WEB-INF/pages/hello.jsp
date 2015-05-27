@@ -20,7 +20,18 @@
 
 	<div id="wrapper">
 		<h1>${message}</h1>
-		<img src="resources/images/plan_statie.jpg" alt="plan statie">
+		<div id="station_layout">
+			<img src="resources/images/t1_empty.png" alt="plan statie">
+			<img src="resources/images/t2_empty.png" alt="plan statie">
+			<img src="resources/images/t2_switch.png" alt="plan statie">
+			<div>
+				<img src="resources/images/t3_x_empty.png" alt="plan statie">
+				<img src="resources/images/t3empty.png" alt="plan statie">
+				<img src="resources/images/t3_y_empty.png" alt="plan statie">
+			</div>
+
+		</div>
+
 		<div class="track_control">
             <h3 class="track_title">Track 1</h3>
 			<div class="track_direction_toggle_wrapper">
