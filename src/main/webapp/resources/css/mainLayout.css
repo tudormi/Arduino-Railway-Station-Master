@@ -7,25 +7,31 @@
     text-align: center;
 }
 
-#wrapper h3{
-    text-align: center;
+.track_control{
+    width: 570px;
+    margin: 10px auto;
 }
 
-#track1_control{
-    width: 600px;
-    height: 100px;
-    margin: auto;
+.track_title{
+    margin: 0 10px 0 0;
+    display: inline-block;
+    width: 100px;
 }
-#track1_direction_toggle_wrapper{
-    width: 50px;
-    height: 100%;
+
+.track_control p{
+    display: inline-block;
+    margin: 0;
+}
+
+.track_direction_toggle_wrapper{
+    width: 120px;
+    margin-right: 30px;
     display: inline-block;
 }
 
-#track1_speed_control_wrapper{
-    width:500px;
+.track_speed_control_wrapper{
+    width:300px;
     display: inline-block;
-    padding-bottom: 50px;
 }
 
 .centre{
@@ -33,6 +39,25 @@
 }
 
 .toggle{
-    height: 50px;
-    margin: 18px 0;
+    margin: 0 20px;
+    width: 50px;
+    display: inline-block;
+}
+
+.tooltip {
+    display: block;
+    position: absolute;
+    border: 1px solid #D9D9D9;
+    font: 400 12px/12px Arial;
+    border-radius: 3px;
+    background: #fff;
+    top: -43px;
+    padding: 5px;
+    left: -9px;
+    text-align: center;
+    width: 50px;
+}
+.tooltip strong {
+    display: block;
+    padding: 2px;
 }

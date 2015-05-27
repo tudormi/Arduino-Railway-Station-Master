@@ -4,31 +4,11 @@
 $(document).ready(function () {
 
     /* Speed slider initializations */
-    $('#track1_direction_toggle').noUiSlider({
-        orientation: "vertical",
-        start: 0,
-        range: {
-            'min': [0, 1],
-            'max': 1
-        },
-        format: wNumb({
-            decimals: 0
-        })
-    });
+    initializeTrackControllers(1);
+    initializeTrackControllers(2);
 
-    $('#track1_speed_control').noUiSlider({
-        start: 0,
-        connect: 'lower',
-        behaviour: 'drag',
-        animate: false,
-        range: {
-            'min': 0,
-            'max': 255
-        },
-        format: wNumb({
-            decimals: 0
-        })
-    });
+
+    $('.tooltip').hide();
 
     /* Ajax calls for speed on slide movement */
     var timer = null;
@@ -75,11 +55,12 @@ $(document).ready(function () {
 
     var updateLastSentValue = function (newValue, trackNumber) {
         lastSentValue = newValue;
-        $('#viewSpeed_track' + trackNumber).children('span').html(newValue);
         if (newValue === 0) {
             $('#track' + trackNumber + '_direction_toggle').removeAttr('disabled');
+            $('.tooltip').hide();
         } else {
             $('#track' + trackNumber + '_direction_toggle').attr('disabled', 'disabled');
+            $('.tooltip').show();
         }
     };
 
@@ -96,9 +77,10 @@ $(document).ready(function () {
     }
 
     $('.direction_toggler').on('slide', function (event) {
-        /* forward = 0, backward = 1 */
+        /* forward = 1, backward = 0 */
+        console.log($(this).val());
         var trackNumber = Number($(this).attr('trackNumber'));
-        if (Number($(this).val()) === 0) {
+        if (Number($(this).val()) === 1) {
             track.direction = 'forward';
             reverseTrackDirection(trackNumber);
         } else {
@@ -108,3 +90,39 @@ $(document).ready(function () {
     });
 
 });
+
+function initializeTrackControllers(trackNumber){
+
+    $('#track'+trackNumber+'_direction_toggle').noUiSlider({
+        orientation: "horizontal",
+        start: 0,
+        range: {
+            'min': [0, 1],
+            'max': 1
+        },
+        format: wNumb({
+            decimals: 0
+        })
+    });
+
+    $('#track'+trackNumber+'_speed_control').noUiSlider({
+        start: 0,
+        connect: 'lower',
+        behaviour: 'drag',
+        animate: false,
+        range: {
+            'min': 0,
+            'max': 255
+        },
+        format: wNumb({
+            decimals: 0
+        })
+    });
+
+    $('#track'+trackNumber+'_speed_control').Link('lower').to('-inline-<div class="tooltip"></div>', function ( value ) {
+        $(this).html(
+            '<strong>Speed: </strong>' +
+            '<span>' + Math.round(Number(value)) + '</span>'
+        );
+    });
+}
