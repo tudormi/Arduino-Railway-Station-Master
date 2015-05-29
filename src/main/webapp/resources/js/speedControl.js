@@ -6,7 +6,7 @@ $(document).ready(function () {
     /* Speed slider initializations */
     initializeTrackControllers(1);
     initializeTrackControllers(2);
-
+    initializeSwitchControllers(1)
 
     $('.tooltip').hide();
 
@@ -57,10 +57,10 @@ $(document).ready(function () {
         lastSentValue = newValue;
         if (newValue === 0) {
             $('#track' + trackNumber + '_direction_toggle').removeAttr('disabled');
-            $('.tooltip').hide();
+            $('#track' + trackNumber + '_speed_control .tooltip').hide();
         } else {
             $('#track' + trackNumber + '_direction_toggle').attr('disabled', 'disabled');
-            $('.tooltip').show();
+            $('#track' + trackNumber + '_speed_control .tooltip').show();
         }
     };
 
@@ -78,7 +78,6 @@ $(document).ready(function () {
 
     $('.direction_toggler').on('slide', function (event) {
         /* forward = 1, backward = 0 */
-        console.log($(this).val());
         var trackNumber = Number($(this).attr('trackNumber'));
         if (Number($(this).val()) === 1) {
             track.direction = 'forward';
@@ -124,5 +123,20 @@ function initializeTrackControllers(trackNumber){
             '<strong>Speed: </strong>' +
             '<span>' + Math.round(Number(value)) + '</span>'
         );
+    });
+}
+
+function initializeSwitchControllers(switchNumber){
+    $('#switch2_toggle').noUiSlider({
+        orientation: "horizontal",
+        connect: 'upper',
+        start: 0,
+        range: {
+            'min': [0, 1],
+            'max': 1
+        },
+        format: wNumb({
+            decimals: 0
+        })
     });
 }

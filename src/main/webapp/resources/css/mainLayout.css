@@ -38,10 +38,21 @@
     text-align: center;
 }
 
-.toggle{
+.track_toggle{
     margin: 0 20px;
     width: 50px;
     display: inline-block;
+}
+
+.switch_toggle{
+    position: absolute;
+    width: 40px;
+    top:120px;
+    left: 160px;
+}
+
+#switch2_toggle.noUi-background{
+    background: red;
 }
 
 .tooltip {
@@ -60,4 +71,138 @@
 .tooltip strong {
     display: block;
     padding: 2px;
+}
+
+/* station layout */
+#station_scheme{
+    position:relative;
+    width:80%;
+    overflow: hidden;
+    border: 1px solid red;
+    margin: 0 auto;
+    min-width:1000px;
+}
+
+#station_scheme > div{
+    display: block;
+    position: static;
+}
+
+#station_scheme .track, #station_scheme > * {
+    max-height: 12px;
+    min-height: 12px;
+}
+
+#track_3 > img{
+    width:100%;
+    display: block;
+}
+
+#track_1 > img {
+    width: 40%;
+    margin-left: 50%;
+    margin-top:24px;
+}
+
+#track_25 > img {
+    margin-top: 12px;
+    position: absolute;
+}
+
+#track_2{
+    width: 54%;
+    left: 21%;
+}
+
+#track_5{
+    width: 16%;
+    left: 5%;
+}
+
+#track_46 > img{
+    position: absolute;
+    bottom: 9px;
+}
+
+#track_4{
+    left:25%;
+    width: 54%;
+}
+
+#track_6{
+    width: 16%;;
+    left:79%;
+}
+
+#station_scheme .spatiu {
+    height:70px;
+    max-height:70px;
+}
+
+.spatiu > img {
+    display: inline-block;
+}
+.turnout{
+    position:absolute;
+}
+
+#left_turnout_1{
+    left: 42%;
+    top: 24px;
+}
+
+#left_turnout_2{
+    left:13%;
+}
+
+#right_turnout_2{
+    right: 17%;
+}
+
+#left_turnout_4{
+    right:13%;
+}
+
+#right_turnout_4{
+    left: 17%;
+}
+
+#map1 {
+    width:100%;
+}
+
+#map2 {
+    display:none;
+}
+
+.coord{
+    width: 15px;
+    height: 15px;
+    border-radius: 10px;
+}
+
+#coord_one, #coord_two{
+    background-color: red;
+    position: absolute;
+    z-index: 150;
+    transform: translate(-50%, -50%);
+}
+
+#coord_three, #coord_four{
+    background-color: blue;
+    position: absolute;
+    z-index: 150;
+    transform: translate(-50%, -50%);
+    display:none;
+}
+
+
+#coord_two{
+    left:94.08%;
+    top:61.22%;
+}
+
+#coord_one{
+    left:25.57%;
+    top:70.94%;
 }

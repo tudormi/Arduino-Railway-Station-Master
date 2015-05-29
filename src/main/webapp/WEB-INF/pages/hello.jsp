@@ -12,6 +12,7 @@
 	<script src="resources/js/jquery.nouislider.all.min.js"></script>
 	<script src="resources/js/wNumb.min.js"></script>
 	<script src="resources/js/speedControl.js" ></script>
+    <script src="resources/js/responsive.js" ></script>
     <script src="resources/js/jquery.liblink.js" ></script>
 
 </head>
@@ -20,23 +21,42 @@
 
 	<div id="wrapper">
 		<h1>${message}</h1>
-		<div id="station_layout">
-			<img src="resources/images/t1_empty.png" alt="plan statie">
-			<img src="resources/images/t2_empty.png" alt="plan statie">
-			<img src="resources/images/t2_switch.png" alt="plan statie">
-			<div>
-				<img src="resources/images/t3_x_empty.png" alt="plan statie">
-				<img src="resources/images/t3empty.png" alt="plan statie">
-				<img src="resources/images/t3_y_empty.png" alt="plan statie">
-			</div>
-
-		</div>
+        <div id="station_scheme">
+            <div id="track_1">
+                <img class ="track" src="resources/images/track.png">
+            </div>
+            <div class="spatiu">
+                <div class="switch_toggle_wrapper">
+                    <div id="switch2_toggle" class=switch_toggle direction_toggler"></div>
+                </div>
+                <img class="turnout" id="left_turnout_1" src="resources/images/left_switch.png">
+            </div>
+            <div id="track_25">
+                <img class ="track" id="track_5" src="resources/images/track.png">
+                <img class ="track" id="track_2" src="resources/images/track.png">
+            </div>
+            <div class="spatiu">
+                <img class="turnout" id="left_turnout_2" src="resources/images/left_switch.png">
+                <img class="turnout" id="right_turnout_2" src="resources/images/right_switch.png">
+            </div>
+            <div id="track_3">
+                <img class ="track" src="resources/images/track.png">
+            </div>
+            <div class="spatiu">
+                <img class="turnout" id="right_turnout_4" src="resources/images/right_switch.png">
+                <img class="turnout" id="left_turnout_4" src="resources/images/left_switch.png">
+            </div>
+            <div id="track_46">
+                <img class ="track" id="track_4" src="resources/images/track.png">
+                <img class ="track" id="track_6" src="resources/images/track.png">
+            </div>
+        </div>
 
 		<div class="track_control">
             <h3 class="track_title">Track 1</h3>
 			<div class="track_direction_toggle_wrapper">
 				<p> B</p>
-				<div id="track1_direction_toggle" class="toggle direction_toggler" trackNumber="1"></div>
+				<div id="track1_direction_toggle" class="track_toggle direction_toggler" trackNumber="1"></div>
 				<p>F</p>
 			</div>
 			<div class="track_speed_control_wrapper">
@@ -48,7 +68,7 @@
             <h3 class="track_title">Track 2</h3>
             <div class="track_direction_toggle_wrapper">
                 <p>B</p>
-                <div id="track2_direction_toggle" class="toggle direction_toggler" trackNumber="2"></div>
+                <div id="track2_direction_toggle" class="track_toggle direction_toggler" trackNumber="2"></div>
                 <p>F</p>
             </div>
             <div class="track_speed_control_wrapper">
