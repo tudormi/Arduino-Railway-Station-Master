@@ -26,9 +26,6 @@
                 <img class ="track" src="resources/images/track.png">
             </div>
             <div class="spatiu">
-                <div class="switch_toggle_wrapper">
-                    <div id="switch2_toggle" class=switch_toggle direction_toggler"></div>
-                </div>
                 <img class="turnout" id="left_turnout_1" src="resources/images/left_switch.png">
             </div>
             <div id="track_25">
@@ -36,6 +33,12 @@
                 <img class ="track" id="track_2" src="resources/images/track.png">
             </div>
             <div class="spatiu">
+                <div class="turnout_toggle_wrapper">
+                    <div id="turnout1_toggle" class="turnout_toggle" turnoutNumber="1"></div>
+                </div>
+                <div class="turnout_toggle_wrapper">
+                    <div id="turnout5_toggle" class="turnout_toggle" turnoutNumber="5"></div>
+                </div>
                 <img class="turnout" id="left_turnout_2" src="resources/images/left_switch.png">
                 <img class="turnout" id="right_turnout_2" src="resources/images/right_switch.png">
             </div>
@@ -43,6 +46,9 @@
                 <img class ="track" src="resources/images/track.png">
             </div>
             <div class="spatiu">
+                <div class="turnout_toggle_wrapper">
+                    <div id="turnout3_toggle" class="turnout_toggle" turnoutNumber="3"></div>
+                </div>
                 <img class="turnout" id="right_turnout_4" src="resources/images/right_switch.png">
                 <img class="turnout" id="left_turnout_4" src="resources/images/left_switch.png">
             </div>
@@ -56,7 +62,7 @@
             <h3 class="track_title">Track 1</h3>
 			<div class="track_direction_toggle_wrapper">
 				<p> B</p>
-				<div id="track1_direction_toggle" class="track_toggle direction_toggler" trackNumber="1"></div>
+				<div id="track1_direction_toggle" class="track_toggle" trackNumber="1"></div>
 				<p>F</p>
 			</div>
 			<div class="track_speed_control_wrapper">
@@ -68,7 +74,7 @@
             <h3 class="track_title">Track 2</h3>
             <div class="track_direction_toggle_wrapper">
                 <p>B</p>
-                <div id="track2_direction_toggle" class="track_toggle direction_toggler" trackNumber="2"></div>
+                <div id="track2_direction_toggle" class="track_toggle" trackNumber="2"></div>
                 <p>F</p>
             </div>
             <div class="track_speed_control_wrapper">

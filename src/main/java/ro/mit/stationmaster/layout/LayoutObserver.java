@@ -81,8 +81,8 @@ public class LayoutObserver {
     public int checkCommandValidity(Turnout turnout){
         /**
          * nu se poate pune un macaz ce ar duce catre o linie ocupata
+         * macazele complementare trebuie schimbate simultan
          */
-
 
 
         return 1;

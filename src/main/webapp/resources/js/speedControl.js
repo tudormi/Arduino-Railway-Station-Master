@@ -6,7 +6,10 @@ $(document).ready(function () {
     /* Speed slider initializations */
     initializeTrackControllers(1);
     initializeTrackControllers(2);
-    initializeSwitchControllers(1)
+    initializeTurnoutControllers(1);
+    initializeTurnoutControllers(5);
+    initializeTurnoutControllers(3);
+
 
     $('.tooltip').hide();
 
@@ -88,6 +91,25 @@ $(document).ready(function () {
         }
     });
 
+    var turnout ={
+        number: 0,
+        direction: 0
+    };
+
+    $('.turnout_toggle').on('slide', function () {
+        turnout.number = Number($(this).attr('turnoutNumber'));
+        turnout.direction = Number($(this).val());
+        /* 0 - directa, 1 - abatuta */
+
+        $.ajax({
+            url: '/command/turnout',
+            type: 'post',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(turnout)
+        });
+    })
+
 });
 
 function initializeTrackControllers(trackNumber){
@@ -126,8 +148,8 @@ function initializeTrackControllers(trackNumber){
     });
 }
 
-function initializeSwitchControllers(switchNumber){
-    $('#switch2_toggle').noUiSlider({
+function initializeTurnoutControllers(turnoutNumber){
+    $('#turnout'+ turnoutNumber +'_toggle').noUiSlider({
         orientation: "horizontal",
         connect: 'upper',
         start: 0,

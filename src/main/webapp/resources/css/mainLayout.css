@@ -44,14 +44,27 @@
     display: inline-block;
 }
 
-.switch_toggle{
+.turnout_toggle{
     position: absolute;
     width: 40px;
-    top:120px;
-    left: 160px;
 }
 
-#switch2_toggle.noUi-background{
+#turnout1_toggle{
+    top:40px;
+    left: 159px;
+}
+
+#turnout5_toggle{
+    top:27px;
+    left: 340px;
+}
+
+#turnout3_toggle{
+    top:17px;
+    left: 210px;
+}
+
+.turnout_toggle.noUi-background{
     background: red;
 }
 
@@ -173,36 +186,4 @@
 
 #map2 {
     display:none;
-}
-
-.coord{
-    width: 15px;
-    height: 15px;
-    border-radius: 10px;
-}
-
-#coord_one, #coord_two{
-    background-color: red;
-    position: absolute;
-    z-index: 150;
-    transform: translate(-50%, -50%);
-}
-
-#coord_three, #coord_four{
-    background-color: blue;
-    position: absolute;
-    z-index: 150;
-    transform: translate(-50%, -50%);
-    display:none;
-}
-
-
-#coord_two{
-    left:94.08%;
-    top:61.22%;
-}
-
-#coord_one{
-    left:25.57%;
-    top:70.94%;
 }
