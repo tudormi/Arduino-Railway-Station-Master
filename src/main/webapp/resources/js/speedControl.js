@@ -9,7 +9,9 @@ $(document).ready(function () {
     initializeTurnoutControllers(1);
     initializeTurnoutControllers(5);
     initializeTurnoutControllers(3);
-
+    initializeTurnoutControllers(4);
+    initializeTurnoutControllers(2);
+    initializeTurnoutControllers(6);
 
     $('.tooltip').hide();
 
@@ -99,8 +101,8 @@ $(document).ready(function () {
     $('.turnout_toggle').on('slide', function () {
         turnout.number = Number($(this).attr('turnoutNumber'));
         turnout.direction = Number($(this).val());
+        changeRoute(turnout.number, turnout.direction);
         /* 0 - directa, 1 - abatuta */
-
         $.ajax({
             url: '/command/turnout',
             type: 'post',
@@ -161,4 +163,23 @@ function initializeTurnoutControllers(turnoutNumber){
             decimals: 0
         })
     });
+}
+
+function changeRoute(turnoutNumber, direction){
+    switch(turnoutNumber){
+        case 1:
+            if(direction === 1){
+                var turnout_src = 'resources/images/left_switch_route.png';
+                var track_src = 'resources/images/track_route.png';
+                $('#left_turnout_2').attr('src', turnout_src);
+                $('#track_2').attr('src', track_src);
+            } else {
+                var turnout_src = 'resources/images/left_switch.png';
+                var track_src = 'resources/images/track.png';
+                $('#left_turnout_2').attr('src', turnout_src);
+                $('#track_2').attr('src', track_src);
+            }
+
+            break;
+    }
 }

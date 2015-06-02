@@ -64,6 +64,21 @@
     left: 210px;
 }
 
+#turnout4_toggle{
+    top:40px;
+    right: 200px;
+}
+
+#turnout2_toggle{
+    top: 17px;
+    right: 135px;
+}
+
+#turnout6_toggle{
+    top: 30px;
+    right: 345px;
+}
+
 .turnout_toggle.noUi-background{
     background: red;
 }

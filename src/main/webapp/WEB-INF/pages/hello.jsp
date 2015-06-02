@@ -40,6 +40,9 @@
                     <div id="turnout5_toggle" class="turnout_toggle" turnoutNumber="5"></div>
                 </div>
                 <img class="turnout" id="left_turnout_2" src="resources/images/left_switch.png">
+                <div class="turnout_toggle_wrapper">
+                    <div id="turnout4_toggle" class="turnout_toggle" turnoutNumber="4"></div>
+                </div>
                 <img class="turnout" id="right_turnout_2" src="resources/images/right_switch.png">
             </div>
             <div id="track_3">
@@ -50,6 +53,12 @@
                     <div id="turnout3_toggle" class="turnout_toggle" turnoutNumber="3"></div>
                 </div>
                 <img class="turnout" id="right_turnout_4" src="resources/images/right_switch.png">
+                <div class="turnout_toggle_wrapper">
+                    <div id="turnout6_toggle" class="turnout_toggle" turnoutNumber="6"></div>
+                </div>
+                <div class="turnout_toggle_wrapper">
+                    <div id="turnout2_toggle" class="turnout_toggle" turnoutNumber="2"></div>
+                </div>
                 <img class="turnout" id="left_turnout_4" src="resources/images/left_switch.png">
             </div>
             <div id="track_46">
