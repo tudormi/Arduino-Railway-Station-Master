@@ -9,14 +9,14 @@ public class IRSensor {
     * atunci cand unul este declansat atunci linia este ocupata
     * iar daca este declansat si celalalt inseamna ca linia devine libera*/
     private int lineNumber;
-    private String type;
+    private String state;
 
     public IRSensor() {
     }
 
     public IRSensor(int lineNumber, String type) {
         this.lineNumber = lineNumber;
-        this.type = type;
+        this.state = type;
     }
 
     public int getLineNumber() {
@@ -27,11 +27,11 @@ public class IRSensor {
         this.lineNumber = lineNumber;
     }
 
-    public String getType() {
-        return type;
+    public String getState() {
+        return state;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setState(String type) {
+        this.state = type;
     }
 }

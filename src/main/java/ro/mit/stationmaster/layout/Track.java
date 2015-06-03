@@ -7,6 +7,7 @@ public class Track {
 
     private int number;
     private int speed;
+    /* empty, present */
     private String direction;
     private String state;
 

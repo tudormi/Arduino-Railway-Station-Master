@@ -34,7 +34,7 @@ public class ArduinoMessageDispatcher {
         IRSensor irSensor = new IRSensor();
         JSONObject jsonObject = new JSONObject(message);
         irSensor.setLineNumber(jsonObject.getInt("track"));
-        irSensor.setType(jsonObject.getString("type"));
+        irSensor.setState(jsonObject.getString("state"));
         layoutObserver.updateLayoutFromArduino(irSensor);
     }
 

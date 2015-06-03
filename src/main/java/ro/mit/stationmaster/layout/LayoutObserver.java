@@ -21,8 +21,9 @@ public class LayoutObserver {
 
     LayoutObserver() {
         /* initially all the lines are empty with 0 speed */
+        /* 0 - linie intrare, 5 - linie iesire */
         tracks = new ArrayList<Track>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             tracks.add(new Track(i+1, 0, "forward", "empty"));
         }
         /* initially all the turnouts are on the straight way */
@@ -37,7 +38,13 @@ public class LayoutObserver {
         /* daca linia este ocupata si macazele nu au fost facute pentru parasirea liniei
          * atunci cand unul din senzori este activat trenul sa se mai poate misca in
           * directia care se misca in acel moment*/
-        tracks.get(sensor.getLineNumber() - 1).setState(sensor.getType());
+
+        int lineNumber = sensor.getLineNumber();
+        if(!tracks.get(lineNumber).getState().equals(sensor.getState())){
+            /* daca s-a schimbat starea unei linii facem update pe interfata si pe server*/
+            /* update la long poll */
+            tracks.get(lineNumber).setState(sensor.getState());
+        }
     }
 
     public void updateLayout(TrackDTO trackDTO){
@@ -48,8 +55,12 @@ public class LayoutObserver {
 //        System.out.println(trackDTO.getSpeed());
         int lineNumber = trackDTO.getNumber();
         logger.info("Linia: " + lineNumber + " , viteza: " + trackDTO.getSpeed());
-        tracks.get(lineNumber-1).setSpeed(trackDTO.getSpeed());
-        tracks.get(lineNumber-1).setDirection(trackDTO.getDirection());
+        tracks.get(lineNumber).setSpeed(trackDTO.getSpeed());
+        tracks.get(lineNumber).setDirection(trackDTO.getDirection());
+    }
+
+    public void updateLayout(Turnout turnout){
+        System.out.println("Turnout " + turnout.getNumber() + " changed to ["+ turnout.getDirection() +"]");
     }
 
     public int checkCommandValidity(TrackDTO trackDTO) {
@@ -68,7 +79,7 @@ public class LayoutObserver {
         }
         else{
             int lineNumber = trackDTO.getNumber();
-            if(tracks.get(lineNumber-1).getSpeed() > trackDTO.getSpeed() && (tracks.get(lineNumber-1).getSpeed()-trackDTO.getSpeed())>10){
+            if(tracks.get(lineNumber).getSpeed() > trackDTO.getSpeed() && (tracks.get(lineNumber).getSpeed()-trackDTO.getSpeed())>10){
                 //ar trebui sa trimita mesaj mai rar cu o crestere treptata a vitezei
             }
             arduinoMessageDispatcher.sendTrackMessage(trackDTO);
@@ -79,11 +90,32 @@ public class LayoutObserver {
     }
 
     public int checkCommandValidity(Turnout turnout){
-        /**
-         * nu se poate pune un macaz ce ar duce catre o linie ocupata
-         * macazele complementare trebuie schimbate simultan
-         */
 
+        switch(turnout.getNumber()){
+            case 1:
+                if(turnout.getDirection() == 1 && tracks.get(2).getState().equals("present") && tracks.get(0).getState().equals("present")){
+                    /* linia 2 este ocupata si intrarea, macazele nu se pot schimba */
+                    return 0;
+                } else{
+                    /* one of the line is not occupied and the turnouts are ok to change */
+                    updateLayout(turnout);
+                    turnout.setNumber(5);
+                    updateLayout(turnout);
+                }
+                break;
+
+            case 5:
+                if(turnout.getDirection() == 1 && tracks.get(2).getState().equals("present") && tracks.get(0).getState().equals("present")){
+                    /* linia 2 este ocupata si intrarea, macazele nu se pot schimba */
+                    return 0;
+                } else{
+                    /* one of the line is not occupied and the turnouts are ok to change */
+                    updateLayout(turnout);
+                    turnout.setNumber(1);
+                    updateLayout(turnout);
+                }
+                break;
+        }
 
         return 1;
     }

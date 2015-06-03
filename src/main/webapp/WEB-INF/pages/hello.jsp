@@ -46,7 +46,11 @@
                 <img class="turnout" id="right_turnout_2" src="resources/images/right_switch.png">
             </div>
             <div id="track_3">
-                <img class ="track" src="resources/images/track.png">
+                <img class ="track" id="track_3_x" src="resources/images/track.png">
+                <img class ="track" id="track_3_x_between" src="resources/images/track.png">
+                <img class ="track" id='track_3_centre' src="resources/images/track.png">
+                <img class ="track" id="track_3_y_between" src="resources/images/track.png">
+                <img class ="track" id='track_3_y' src="resources/images/track.png">
             </div>
             <div class="spatiu">
                 <div class="turnout_toggle_wrapper">

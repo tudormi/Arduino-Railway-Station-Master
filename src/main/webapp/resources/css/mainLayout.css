@@ -121,8 +121,37 @@
     min-height: 12px;
 }
 
-#track_3 > img{
-    width:100%;
+#track_3_x{
+    position: absolute;
+    width: 15%;
+    display: block;
+}
+
+#track_3_x_between{
+    position: absolute;
+    width: 4%;
+    display: block;
+    left: 15%;
+}
+
+#track_3_centre{
+    position: absolute;
+    left: 19%;
+    width:62%;
+    display: block;
+}
+
+#track_3_y_between{
+    position: absolute;
+    left: 81%;
+    width: 4.1%;
+    display: block;
+}
+
+#track_3_y{
+    position: absolute;
+    left: 85.1%;
+    width: 15%;
     display: block;
 }
 
