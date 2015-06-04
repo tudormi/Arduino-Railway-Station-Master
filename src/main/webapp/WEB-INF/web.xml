@@ -13,6 +13,10 @@
 		</param-value>
 	</context-param>
 
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
     <servlet>
 		<servlet-name>stationMaster</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -21,11 +25,8 @@
 			<param-value></param-value>
 		</init-param>
         <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
 	</servlet>
-	
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
 
 	<servlet-mapping>
 		<servlet-name>stationMaster</servlet-name>

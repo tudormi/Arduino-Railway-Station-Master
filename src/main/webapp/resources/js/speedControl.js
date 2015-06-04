@@ -3,6 +3,8 @@
  */
 $(document).ready(function () {
 
+    var polling = new Poll();
+
     /* Speed slider initializations */
     initializeTrackControllers(1);
     initializeTrackControllers(2);

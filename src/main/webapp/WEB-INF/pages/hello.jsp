@@ -12,6 +12,7 @@
 	<script src="resources/js/jquery.nouislider.all.min.js"></script>
 	<script src="resources/js/wNumb.min.js"></script>
 	<script src="resources/js/speedControl.js" ></script>
+    <script src="resources/js/sensorPolling.js" ></script>
     <script src="resources/js/responsive.js" ></script>
     <script src="resources/js/jquery.liblink.js" ></script>
 

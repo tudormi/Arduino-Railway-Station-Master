@@ -3,8 +3,10 @@ package ro.mit.stationmaster.layout;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import ro.mit.stationmaster.dto.IRSensorDTO;
 import ro.mit.stationmaster.dto.TrackDTO;
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by Tudormi on 15/5/2015.
@@ -12,6 +14,9 @@ import java.util.ArrayList;
 public class LayoutObserver {
 
     private final static Logger logger = LogManager.getLogger(LayoutObserver.class);
+
+    @Autowired
+    LinkedBlockingQueue<IRSensorDTO> queue;
 
     @Autowired
     ArduinoMessageDispatcher arduinoMessageDispatcher;
@@ -23,8 +28,8 @@ public class LayoutObserver {
         /* initially all the lines are empty with 0 speed */
         /* 0 - linie intrare, 5 - linie iesire */
         tracks = new ArrayList<Track>();
-        for (int i = 0; i < 6; i++) {
-            tracks.add(new Track(i+1, 0, "forward", "empty"));
+        for (int i = 0; i < 8; i++) {
+            tracks.add(new Track(i, 0, "forward", "empty"));
         }
         /* initially all the turnouts are on the straight way */
         turnouts = new ArrayList<Turnout>();
@@ -33,17 +38,37 @@ public class LayoutObserver {
         }
     }
 
-    /* singurul update venit de la Arduino momentan */
     public void updateLayoutFromArduino(IRSensor sensor) {
-        /* daca linia este ocupata si macazele nu au fost facute pentru parasirea liniei
-         * atunci cand unul din senzori este activat trenul sa se mai poate misca in
-          * directia care se misca in acel moment*/
+        IRSensorDTO irSensorDTO;
+        switch (sensor.getTrack()){
+            case 0:
+                if(tracks.get(0).getState().equals("empty")){
+                    tracks.get(0).setState("present");
+                }
+                else if(tracks.get(0).getState().equals("present")){
+                    /* trenul vine dinspre modulul vecin, se blocheaza parcursul*/
+                    if(sensor.getOrientation() == 1){
+                        //trebuie blocat parcursul
+                    }
+                    tracks.get(0).setState("empty");
+                }
+                irSensorDTO = new IRSensorDTO(0, tracks.get(0).getState());
+                queue.add(irSensorDTO);
+                break;
 
-        int lineNumber = sensor.getLineNumber();
-        if(!tracks.get(lineNumber).getState().equals(sensor.getState())){
-            /* daca s-a schimbat starea unei linii facem update pe interfata si pe server*/
-            /* update la long poll */
-            tracks.get(lineNumber).setState(sensor.getState());
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                if(tracks.get(sensor.getTrack()).getState().equals("empty")){
+                    tracks.get(sensor.getTrack()).setState("present");
+                }
+                else if(tracks.get(sensor.getTrack()).getState().equals("present")){
+                    tracks.get(sensor.getTrack()).setState("empty");
+                }
+                irSensorDTO = new IRSensorDTO(sensor.getTrack(), tracks.get(sensor.getTrack()).getState());
+                queue.add(irSensorDTO);
+                break;
         }
     }
 
