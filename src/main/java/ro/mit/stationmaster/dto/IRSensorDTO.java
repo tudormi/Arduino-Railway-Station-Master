@@ -7,13 +7,15 @@ public class IRSensorDTO {
 
     private int track;
     private String state;
+    private int orientation;
 
     public IRSensorDTO() {
     }
 
-    public IRSensorDTO(int track, String state) {
+    public IRSensorDTO(int track, String state, int orientation) {
         this.track = track;
         this.state = state;
+        this.orientation = orientation;
     }
 
     public int getTrack() {
@@ -30,5 +32,13 @@ public class IRSensorDTO {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public int getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
     }
 }

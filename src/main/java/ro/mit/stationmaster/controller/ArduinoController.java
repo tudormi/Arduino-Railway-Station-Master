@@ -12,6 +12,7 @@ import ro.mit.stationmaster.dto.IRSensorDTO;
 import ro.mit.stationmaster.dto.TrackDTO;
 import ro.mit.stationmaster.layout.IRSensor;
 import ro.mit.stationmaster.layout.LayoutObserver;
+import ro.mit.stationmaster.layout.Signal;
 import ro.mit.stationmaster.layout.Turnout;
 import ro.mit.stationmaster.service.SensorUpdateService;
 import ro.mit.stationmaster.utils.SerialComm;
@@ -56,20 +57,24 @@ public class ArduinoController {
 //        else return 1;
     }
 
+    @RequestMapping(value = "/signal", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public int sendSignalCommand(@RequestBody Signal signal){
+        return 1;
+    }
+
     @RequestMapping(value = "/getSensor", method = RequestMethod.GET)
     @ResponseBody
     public DeferredResult<IRSensorDTO> getSensors(){
         final DeferredResult<IRSensorDTO> deferredResult = new DeferredResult<IRSensorDTO>();
         sensorUpdateService.getUpdate(deferredResult);
-        System.out.println("returnam un senszor");
         return deferredResult;
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public int test(@RequestBody IRSensor irSensor){
-        System.out.println("primim un senszor");
-        layoutObserver.updateLayoutFromArduino(irSensor);
-        return 1;
+    public IRSensorDTO test(@RequestBody IRSensor irSensor){
+        return layoutObserver.updateLayoutFromArduino(irSensor);
+//        return 1;
     }
 }

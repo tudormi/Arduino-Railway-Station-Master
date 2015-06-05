@@ -95,7 +95,7 @@ $(document).ready(function () {
         }
     });
 
-    var turnout ={
+    var turnout = {
         number: 0,
         direction: 0
     };
@@ -110,16 +110,16 @@ $(document).ready(function () {
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(turnout),
-            success: function(data){
-                if(data === 0){
-                    if(turnout.direction === 1) {
-                        $('#turnout'+ turnout.number +'_toggle').val(0);
+            success: function (data) {
+                if (data === 0) {
+                    if (turnout.direction === 1) {
+                        $('#turnout' + turnout.number + '_toggle').val(0);
                     }
                     else {
-                        $('#turnout'+ turnout.number +'_toggle').val(1);
+                        $('#turnout' + turnout.number + '_toggle').val(1);
                     }
                 }
-                else{
+                else {
                     synchronizeTurnouts(turnout.number, turnout.direction);
                     changeRoute(turnout.number, turnout.direction);
                 }
@@ -130,9 +130,9 @@ $(document).ready(function () {
 
 });
 
-function initializeTrackControllers(trackNumber){
+function initializeTrackControllers(trackNumber) {
 
-    $('#track'+trackNumber+'_direction_toggle').noUiSlider({
+    $('#track' + trackNumber + '_direction_toggle').noUiSlider({
         orientation: "horizontal",
         start: 0,
         range: {
@@ -144,7 +144,7 @@ function initializeTrackControllers(trackNumber){
         })
     });
 
-    $('#track'+trackNumber+'_speed_control').noUiSlider({
+    $('#track' + trackNumber + '_speed_control').noUiSlider({
         start: 0,
         connect: 'lower',
         behaviour: 'drag',
@@ -158,7 +158,7 @@ function initializeTrackControllers(trackNumber){
         })
     });
 
-    $('#track'+trackNumber+'_speed_control').Link('lower').to('-inline-<div class="tooltip"></div>', function ( value ) {
+    $('#track' + trackNumber + '_speed_control').Link('lower').to('-inline-<div class="tooltip"></div>', function (value) {
         $(this).html(
             '<strong>Speed: </strong>' +
             '<span>' + Math.round(Number(value)) + '</span>'
@@ -166,8 +166,8 @@ function initializeTrackControllers(trackNumber){
     });
 }
 
-function initializeTurnoutControllers(turnoutNumber){
-    $('#turnout'+ turnoutNumber +'_toggle').noUiSlider({
+function initializeTurnoutControllers(turnoutNumber) {
+    $('#turnout' + turnoutNumber + '_toggle').noUiSlider({
         orientation: "horizontal",
         connect: 'upper',
         start: 0,
@@ -181,20 +181,20 @@ function initializeTurnoutControllers(turnoutNumber){
     });
 }
 
-function changeRoute(turnoutNumber, direction){
+function changeRoute(turnoutNumber, direction) {
     /* use direction = -1 to know that the turnout before the active switch changed */
     var left_turnout_src_route = 'resources/images/left_switch_route.png';
-    var left_turnout_src = 'resources/images/left_switch.png';
-    var track_src = 'resources/images/track.png';
+    var left_turnout_src = 'resources/images/left_switch_empty.png';
+    var track_src = 'resources/images/track_empty.png';
     var track_src_route = 'resources/images/track_route.png';
     var right_turnout_src_route = 'resources/images/right_switch_route.png';
-    var right_turnout_src = 'resources/images/right_switch.png';
+    var right_turnout_src = 'resources/images/right_switch_empty.png';
 
 
-    switch(turnoutNumber){
+    switch (turnoutNumber) {
 
         case 1:
-            if(direction === 1){
+            if (direction === 1) {
                 /* abatuta - put route to track 2 */
                 $('#left_turnout_2').attr('src', left_turnout_src_route);
                 $('#track_2').attr('src', track_src_route);
@@ -213,14 +213,14 @@ function changeRoute(turnoutNumber, direction){
 
         case 3:
             var previousTurnout = Number($('#turnout1_toggle').val());
-            if(previousTurnout === 0){
-                if(direction === 1){
+            if (previousTurnout === 0) {
+                if (direction === 1) {
                     /* abatuta - put route for track 4 */
                     $('#right_turnout_4').attr('src', right_turnout_src_route);
                     $('#track_4').attr('src', track_src_route);
                     /* remove route from track 3 */
                     $('#track_3_centre').attr('src', track_src);
-                } else if(direction === 0){
+                } else if (direction === 0) {
                     /* remove route from track 4 and put it to track 3 */
                     $('#right_turnout_4').attr('src', right_turnout_src);
                     $('#track_4').attr('src', track_src);
@@ -237,16 +237,16 @@ function changeRoute(turnoutNumber, direction){
     }
 }
 
-function synchronizeTurnouts(turnoutNumber, turnoutDirection){
-    switch(turnoutNumber){
+function synchronizeTurnouts(turnoutNumber, turnoutDirection) {
+    switch (turnoutNumber) {
         case 1:
             $('#turnout5_toggle').val(turnoutDirection);
-            changeRoute(5,turnoutDirection);
+            changeRoute(5, turnoutDirection);
             break;
 
         case 5:
             $('#turnout1_toggle').val(turnoutDirection);
-            changeRoute(1,turnoutDirection);
+            changeRoute(1, turnoutDirection);
             break;
 
         case 2:

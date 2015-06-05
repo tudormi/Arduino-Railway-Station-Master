@@ -51,7 +51,6 @@ public class SensorUpdateService implements Runnable {
                 DeferredResult<IRSensorDTO> result = resultQueue.take();
                 /* wait for a new update of the sensors */
                 IRSensorDTO irSensor = queue.take();
-                System.out.println("am gasit un senzor");
                 /* when an update is ready put it in result que so that it can be sent to the client */
                 result.setResult(irSensor);
             } catch (InterruptedException e) {

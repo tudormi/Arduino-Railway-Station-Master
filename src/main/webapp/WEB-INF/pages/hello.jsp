@@ -4,8 +4,8 @@
 <head>
 	<link href="resources/css/metro.css " rel="stylesheet" type="text/css">
 	<link href="resources/css/jquery.nouislider.min.css" rel="stylesheet">
-	<link href="resources/css/mainLayout.css" rel="stylesheet">
     <link href="resources/css/metro-icons.css" rel="stylesheet">
+	<link href="resources/css/mainLayout.css" rel="stylesheet">
 
 	<script src="resources/js/jquery-1.11.3.js"></script>
 	<script src="resources/js/metro.min.js"></script>
@@ -13,6 +13,7 @@
 	<script src="resources/js/wNumb.min.js"></script>
 	<script src="resources/js/speedControl.js" ></script>
     <script src="resources/js/sensorPolling.js" ></script>
+    <script src="resources/js/signals.js" ></script>
     <script src="resources/js/responsive.js" ></script>
     <script src="resources/js/jquery.liblink.js" ></script>
 
@@ -24,14 +25,20 @@
 		<h1>${message}</h1>
         <div id="station_scheme">
             <div id="track_1">
-                <img class ="track" src="resources/images/track.png">
+                <img class ="track" src="resources/images/track_empty.png">
             </div>
             <div class="spatiu">
-                <img class="turnout" id="left_turnout_1" src="resources/images/left_switch.png">
+                <img class="turnout" id="left_turnout_1" src="resources/images/left_switch_empty.png">
             </div>
             <div id="track_25">
-                <img class ="track" id="track_5" src="resources/images/track.png">
-                <img class ="track" id="track_2" src="resources/images/track.png">
+                <ul class="breadcrumbs2 mini" id="signal_y2">
+                    <li><a href="#"><span class="mif-traff fg-black"></span></a></li>
+                    <li><a href="#"><span class="mif-contrast fg-green"></span></a></li>
+                    <li><a href="#"><span class="mif-contrast fg-yellow"></span></a></li>
+                    <li><a href="#"><span class="mif-contrast fg-red"></span></a></li>
+                </ul>
+                <img class ="track" id="track_5" src="resources/images/track_empty.png">
+                <img class ="track" id="track_2" src="resources/images/track_empty.png">
             </div>
             <div class="spatiu">
                 <div class="turnout_toggle_wrapper">
@@ -40,35 +47,41 @@
                 <div class="turnout_toggle_wrapper">
                     <div id="turnout5_toggle" class="turnout_toggle" turnoutNumber="5"></div>
                 </div>
-                <img class="turnout" id="left_turnout_2" src="resources/images/left_switch.png">
+                <img class="turnout" id="left_turnout_2" src="resources/images/left_switch_empty.png">
                 <div class="turnout_toggle_wrapper">
                     <div id="turnout4_toggle" class="turnout_toggle" turnoutNumber="4"></div>
                 </div>
-                <img class="turnout" id="right_turnout_2" src="resources/images/right_switch.png">
+                <img class="turnout" id="right_turnout_2" src="resources/images/right_switch_empty.png">
             </div>
             <div id="track_3">
-                <img class ="track" id="track_3_x" src="resources/images/track.png">
-                <img class ="track" id="track_3_x_between" src="resources/images/track.png">
-                <img class ="track" id='track_3_centre' src="resources/images/track.png">
-                <img class ="track" id="track_3_y_between" src="resources/images/track.png">
-                <img class ="track" id='track_3_y' src="resources/images/track.png">
+                <ul class="breadcrumbs2 mini signal" id="signal_x" type="x" number="0">
+                    <li><a href="#"><span class="mif-traff fg-black"></span></a></li>
+                    <li color="red"><a href="#"><span class="mif-contrast fg-red"></span></a></li>
+                    <li color="yellow"><a href="#"><span class="mif-contrast fg-yellow"></span></a></li>
+                    <li color="green"><a href="#"><span class="mif-contrast fg-green"></span></a></li>
+                </ul>
+                <img class ="track" id="track_3_x" src="resources/images/track_empty.png">
+                <img class ="track" id="track_3_x_between" src="resources/images/track_empty.png">
+                <img class ="track" id='track_3_centre' src="resources/images/track_empty.png">
+                <img class ="track" id="track_3_y_between" src="resources/images/track_empty.png">
+                <img class ="track" id='track_3_y' src="resources/images/track_empty.png">
             </div>
             <div class="spatiu">
                 <div class="turnout_toggle_wrapper">
                     <div id="turnout3_toggle" class="turnout_toggle" turnoutNumber="3"></div>
                 </div>
-                <img class="turnout" id="right_turnout_4" src="resources/images/right_switch.png">
+                <img class="turnout" id="right_turnout_4" src="resources/images/right_switch_empty.png">
                 <div class="turnout_toggle_wrapper">
                     <div id="turnout6_toggle" class="turnout_toggle" turnoutNumber="6"></div>
                 </div>
                 <div class="turnout_toggle_wrapper">
                     <div id="turnout2_toggle" class="turnout_toggle" turnoutNumber="2"></div>
                 </div>
-                <img class="turnout" id="left_turnout_4" src="resources/images/left_switch.png">
+                <img class="turnout" id="left_turnout_4" src="resources/images/left_switch_empty.png">
             </div>
             <div id="track_46">
-                <img class ="track" id="track_4" src="resources/images/track.png">
-                <img class ="track" id="track_6" src="resources/images/track.png">
+                <img class ="track" id="track_4" src="resources/images/track_empty.png">
+                <img class ="track" id="track_6" src="resources/images/track_empty.png">
             </div>
         </div>
 

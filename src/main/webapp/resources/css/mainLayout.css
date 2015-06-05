@@ -44,6 +44,31 @@
     display: inline-block;
 }
 
+#signal_y2{
+    display: block;
+    position: absolute;
+    top:50px;
+    left: 365px;
+    width: auto;
+}
+
+#signal_x{
+    display: block;
+    position: absolute;
+    top: 170px;
+    left: 50px;
+    width: auto;
+}
+
+#signal_y2 li, #signal_x li{
+    margin: 0 11px 0 0;
+    width: auto;
+}
+
+#signal_y2 li a, #signal_x li a{
+    padding: 1px 4px;
+}
+
 .turnout_toggle{
     position: absolute;
     width: 40px;
