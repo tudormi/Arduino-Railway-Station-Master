@@ -8,14 +8,16 @@ public class IRSensorDTO {
     private int track;
     private String state;
     private int orientation;
+    private int counter;
 
     public IRSensorDTO() {
     }
 
-    public IRSensorDTO(int track, String state, int orientation) {
+    public IRSensorDTO(int track, String state, int orientation, int counter) {
         this.track = track;
         this.state = state;
         this.orientation = orientation;
+        this.counter = counter;
     }
 
     public int getTrack() {
@@ -40,5 +42,13 @@ public class IRSensorDTO {
 
     public void setOrientation(int orientation) {
         this.orientation = orientation;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
     }
 }

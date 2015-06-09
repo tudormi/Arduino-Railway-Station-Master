@@ -10,6 +10,7 @@ public class Track {
     /* empty, present */
     private String direction;
     private String state;
+    private int sensorCounter;
 
     public Track(int trackNumber, int trackSpeed, String direction) {
         this.number = trackNumber;
@@ -20,11 +21,12 @@ public class Track {
     public Track() {
     }
 
-    public Track(int number, int speed, String direction, String state) {
+    public Track(int number, int speed, String direction, String state, int sensorCounter) {
         this.number = number;
         this.speed = speed;
         this.direction = direction;
         this.state = state;
+        this.sensorCounter = sensorCounter;
     }
 
     public int getNumber() {
@@ -57,5 +59,13 @@ public class Track {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public int getSensorCounter() {
+        return sensorCounter;
+    }
+
+    public void setSensorCounter(int sensorCounter) {
+        this.sensorCounter = sensorCounter;
     }
 }

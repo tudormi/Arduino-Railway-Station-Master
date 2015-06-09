@@ -60,7 +60,7 @@ public class ArduinoController {
     @RequestMapping(value = "/signal", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public int sendSignalCommand(@RequestBody Signal signal){
-        return 1;
+        return layoutObserver.checkCommandValidity(signal);
     }
 
     @RequestMapping(value = "/getSensor", method = RequestMethod.GET)
