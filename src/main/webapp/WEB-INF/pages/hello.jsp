@@ -16,7 +16,7 @@
     <script src="resources/js/signals.js" ></script>
     <script src="resources/js/responsive.js" ></script>
     <script src="resources/js/jquery.liblink.js" ></script>
-
+    <script src="resources/js/reloadLayout.js" ></script>
 </head>
 
 <body>
@@ -33,9 +33,9 @@
             <div id="track_25">
                 <ul class="breadcrumbs2 mini" id="signal_y2">
                     <li><a href="#"><span class="mif-traff fg-black"></span></a></li>
-                    <li><a href="#"><span class="mif-contrast fg-green"></span></a></li>
-                    <li><a href="#"><span class="mif-contrast fg-yellow"></span></a></li>
-                    <li><a href="#"><span class="mif-contrast fg-red"></span></a></li>
+                    <li color="green"><a href="#"><span class="mif-contrast fg-grayLight"></span></a></li>
+                    <li color="yellow"><a href="#"><span class="mif-contrast fg-grayLight"></span></a></li>
+                    <li color="red"><a href="#"><span class="mif-contrast fg-red"></span></a></li>
                 </ul>
                 <img class ="track" id="track_5" src="resources/images/track_empty.png">
                 <img class ="track" id="track_2" src="resources/images/track_empty.png">
@@ -54,11 +54,11 @@
                 <img class="turnout" id="right_turnout_2" src="resources/images/right_switch_empty.png">
             </div>
             <div id="track_3">
-                <ul class="breadcrumbs2 mini signal" id="signal_x" type="x" number="0">
+                <ul class="breadcrumbs2 mini signal" id="signal_x" type="0" number="0">
                     <li><a href="#"><span class="mif-traff fg-black"></span></a></li>
                     <li color="red"><a href="#"><span class="mif-contrast fg-red"></span></a></li>
-                    <li color="yellow"><a href="#"><span class="mif-contrast fg-yellow"></span></a></li>
-                    <li color="green"><a href="#"><span class="mif-contrast fg-green"></span></a></li>
+                    <li color="yellow"><a href="#"><span class="mif-contrast fg-grayLight"></span></a></li>
+                    <li color="green"><a href="#"><span class="mif-contrast fg-grayLight"></span></a></li>
                 </ul>
                 <img class ="track" id="track_3_x" src="resources/images/track_empty.png">
                 <img class ="track" id="track_3_x_between" src="resources/images/track_empty.png">

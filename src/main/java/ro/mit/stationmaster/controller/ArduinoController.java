@@ -42,7 +42,6 @@ public class ArduinoController {
     @RequestMapping(value = "/line", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public int sendLineCommand(@RequestBody TrackDTO trackDTO) {
-        System.out.println("viteza: " + trackDTO.getSpeed());
 //        return layoutObserver.checkCommandValidity(trackDTO);
         return 1;
     }
@@ -50,8 +49,6 @@ public class ArduinoController {
     @RequestMapping(value = "/turnout", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public int sendTurnoutCommand(@RequestBody Turnout turnout){
-        System.out.println(turnout.getNumber());
-        System.out.println(turnout.getDirection());
         return layoutObserver.checkCommandValidity(turnout);
 //        if(turnout.getNumber() == 1 || turnout.getNumber()==5)return 0;
 //        else return 1;
@@ -71,10 +68,13 @@ public class ArduinoController {
         return deferredResult;
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/localStorage", method = RequestMethod.GET)
     @ResponseBody
-    public IRSensorDTO test(@RequestBody IRSensor irSensor){
-        return layoutObserver.updateLayoutFromArduino(irSensor);
-//        return 1;
+    public int localStorage(){
+        if(layoutObserver.getLocalStorageClearFlag() == 0) {
+            layoutObserver.setLocalStorageClearFlag(1);
+            return 0;
+        }
+        else return 1;
     }
 }

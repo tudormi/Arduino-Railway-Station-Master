@@ -24,6 +24,7 @@ public class LayoutObserver {
 
     private ArrayList<Track> tracks;
     private ArrayList<Turnout> turnouts;
+    private int localStorageClearFlag;
 
     LayoutObserver() {
         /* initially all the lines are empty with 0 speed */
@@ -37,6 +38,16 @@ public class LayoutObserver {
         for (int i = 0; i < 6; i++) {
             turnouts.add(new Turnout(i + 1, 0));
         }
+
+        localStorageClearFlag = 0;
+    }
+
+    public int getLocalStorageClearFlag() {
+        return localStorageClearFlag;
+    }
+
+    public void setLocalStorageClearFlag(int localStorageClearFlag) {
+        this.localStorageClearFlag = localStorageClearFlag;
     }
 
     public IRSensorDTO updateLayoutFromArduino(IRSensor sensor) {
@@ -92,7 +103,7 @@ public class LayoutObserver {
     }
 
     public void updateLayout(Turnout turnout) {
-        System.out.println("Turnout " + turnout.getNumber() + " changed to [" + turnout.getDirection() + "]");
+//        System.out.println("Turnout " + turnout.getNumber() + " changed to [" + turnout.getDirection() + "]");
     }
 
     public int checkCommandValidity(TrackDTO trackDTO) {

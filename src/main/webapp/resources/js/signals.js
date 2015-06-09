@@ -23,20 +23,25 @@ $(document).ready(function () {
         signal.type = Number($(this).parent().attr('type'));
         signal.color = $(this).attr('color');
 
-        $.ajax({
-            url: '/command/signal',
-            type: 'post',
-            dataType: 'json',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(signal),
-            success: function (data) {
-                if (data == 1) {
-                    blockRoute(1);
-                } else if (data == 0) {
-                    alert('macaze puse gresit');
+        if(make_route == true && (signal.color === 'green' || signal.color === 'yellow' )){
+            $.ajax({
+                url: '/command/signal',
+                type: 'post',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(signal),
+                success: function (data) {
+                    console.log('asdasdasd');
+                    if (data == 1) {
+                        blockRoute(1)
+                        $(this).children('span').removeClass('fg-grayLight').addClass('fg-' + signal.color );
+                        $('#signal_x li[color="red"]').removeClass('fg-red').addClass('fg-grayLight');
+                    } else if (data == 0) {
+                        alert('macaze puse gresit');
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 
     var turnout = {
@@ -48,32 +53,21 @@ $(document).ready(function () {
         turnout.number = Number($(this).attr('turnoutNumber'));
         turnout.direction = Number($(this).val());
         /* 0 - directa, 1 - abatuta */
-        $.ajax({
-            url: '/command/turnout',
-            type: 'post',
-            dataType: 'json',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(turnout),
-            success: function (data) {
-                synchronizeTurnouts(turnout.number, turnout.direction);
-                if (make_route == true) {
+        synchronizeTurnouts(turnout.number, turnout.direction);
+        if(make_route == true){
+            $.ajax({
+                url: '/command/turnout',
+                type: 'post',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(turnout),
+                success: function (data) {
                     changeRoute(turnout.number, turnout.direction);
                 }
-                //if (data === 0) {
-                //    if (turnout.direction === 1) {
-                //        $('#turnout' + turnout.number + '_toggle').val(0);
-                //    }
-                //    else {
-                //        $('#turnout' + turnout.number + '_toggle').val(1);
-                //    }
-                //}
-                //else {
-                //
-                //
-                //}
-            }
 
-        });
+            });
+        }
+
     });
 
 });
@@ -96,13 +90,13 @@ function processSensor(sensor) {
                 //trenul a ajuns la senzorul dinainte de semnal
                 //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                 //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
-                if($('#turnout1_toggle').val() == 1){
+                if ($('#turnout1_toggle').val() == 1) {
                     $('#left_turnout_2').attr('src', present_track_src);
                 }
-                else{
+                else {
                     $('#track_3_x_between').attr('src', present_track_src);
                 }
-            } else if(sensor['state'] == 'empty') {
+            } else if (sensor['state'] == 'empty') {
                 $('#track_3_x').attr('src', empty_track_src);
                 $('#track_3_x_between').attr('src', empty_track_src);
                 unblockRoute(1);
@@ -117,16 +111,16 @@ function processSensor(sensor) {
 
             if (sensor['state'] == 'present' && sensor['orientation'] == 0) {
                 $('#track_3_centre').attr('src', present_track_src);
-                if(sensor['counter'] == 1){
+                if (sensor['counter'] == 1) {
                     //vine dinspre y
                     //trenul a ajuns la senzorul dinainte de semnal
                     //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                     //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                 }
             }
-            if(sensor['state'] == 'present' && sensor['orientation'] == 1){
+            if (sensor['state'] == 'present' && sensor['orientation'] == 1) {
                 $('#track_3_centre').attr('src', present_track_src);
-                if(sensor['counter'] == 1){
+                if (sensor['counter'] == 1) {
                     //vine dinspre x
                     //trenul a ajuns la senzorul dinainte de semnal
                     //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
@@ -213,12 +207,12 @@ function synchronizeTurnouts(turnoutNumber, turnoutDirection) {
     switch (turnoutNumber) {
         case 1:
             $('#turnout5_toggle').val(turnoutDirection);
-            changeRoute(5, turnoutDirection);
+            if(make_route == true) changeRoute(5, turnoutDirection);
             break;
 
         case 5:
             $('#turnout1_toggle').val(turnoutDirection);
-            changeRoute(1, turnoutDirection);
+            if(make_route == true) changeRoute(1, turnoutDirection);
             break;
 
         case 2:
@@ -232,45 +226,21 @@ function synchronizeTurnouts(turnoutNumber, turnoutDirection) {
 }
 
 function blockRoute(firstTurnout) {
-
     switch (firstTurnout) {
         case 1:
             $('#turnout1_toggle').attr('disabled', 'disabled');
             $('#turnout3_toggle').attr('disabled', 'disabled');
             $('#turnout5_toggle').attr('disabled', 'disabled');
-            //if ($('#turnout1_toggle').val() == 0) {
-            //    /* coloram parcursul in rosu */
-            //    $('#track_3_x_between').attr('src', presentTrack_src);
-            //    $('#track_3_centre').attr('src', presentTrack_src);
-            //} else {
-            //    /* coloram parcursul in rosu */
-            //    $('#left_turnout_2').attr('src', presentTrack_src);
-            //    $('#track_2').attr('src', presentTrack_src);
-            //}
             break;
     }
 }
 
 function unblockRoute(firstTurnout) {
-
-    var emptyTrack_src = 'resources/images/track_empty.png';
-
     switch (firstTurnout) {
         case 1:
             $('#turnout1_toggle').removeAttr('disabled');
             $('#turnout3_toggle').removeAttr('disabled');
             $('#turnout5_toggle').removeAttr('disabled');
-            //$('#track_3_x').attr('src', emptyTrack_src);
-            //$('#track_3_x_between').attr('src', emptyTrack_src);
-            //if ($('#turnout1_toggle').val() == 0) {
-            //    /* revenim la parcurs neocupat */
-            //    $('#track_3_x_between').attr('src', emptyTrack_src);
-            //    $('#track_3_centre').attr('src', emptyTrack_src);
-            //} else {
-            //    /* revenim la parcurs neocupat */
-            //    $('#left_turnout_2').attr('src', emptyTrack_src);
-            //    $('#track_2').attr('src', emptyTrack_src);
-            //}
             break;
     }
 }
