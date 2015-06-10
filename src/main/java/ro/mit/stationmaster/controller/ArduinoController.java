@@ -77,4 +77,11 @@ public class ArduinoController {
         }
         else return 1;
     }
+
+    @RequestMapping(value = "/test", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public IRSensorDTO test(@RequestBody IRSensor irSensor){
+        return layoutObserver.updateLayoutFromArduino(irSensor);
+//        return 1;
+    }
 }

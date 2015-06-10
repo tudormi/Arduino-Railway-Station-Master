@@ -4,15 +4,7 @@
 
 $(document).ready(function() {
 
-    $.ajax({
-        url: '/command/localStorage',
-        type: 'get',
-        success: function (data) {
-            console.log('lalala');
-            if(data == 0 ) localStorage.clear();
-        }
-    });
-
+    clearCall();
     if(localStorage.length == 0) return;
 
     $('#track_25').html(localStorage.getItem('track_25'));
@@ -86,4 +78,19 @@ function getTurnoutState(turnoutNumber){
         return 'disabled';
     }
     else return 'enabled';
+}
+
+function clearCall(){
+    $.ajax({
+        url: '/command/localStorage',
+        async: false,
+        type: 'get',
+        success: function (data) {
+            if(data == 0 ) {
+                localStorage.clear();
+                return 0;
+            }
+            else return 1;
+        }
+    });
 }

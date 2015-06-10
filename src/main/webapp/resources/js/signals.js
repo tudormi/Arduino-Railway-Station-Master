@@ -23,7 +23,7 @@ $(document).ready(function () {
         signal.type = Number($(this).parent().attr('type'));
         signal.color = $(this).attr('color');
 
-        if(make_route == true && (signal.color === 'green' || signal.color === 'yellow' )){
+        if (make_route == true && (signal.color === 'green' || signal.color === 'yellow' )) {
             $.ajax({
                 url: '/command/signal',
                 type: 'post',
@@ -33,9 +33,9 @@ $(document).ready(function () {
                 success: function (data) {
                     console.log('asdasdasd');
                     if (data == 1) {
-                        blockRoute(1)
-                        $(this).children('span').removeClass('fg-grayLight').addClass('fg-' + signal.color );
-                        $('#signal_x li[color="red"]').removeClass('fg-red').addClass('fg-grayLight');
+                        blockRoute(1);
+                        $('#signal_x li[color="' + signal.color + '"] span').removeClass('fg-grayLight').addClass('fg-' + signal.color);
+                        $('#signal_x li[color="red"] span').removeClass('fg-red').addClass('fg-grayLight');
                     } else if (data == 0) {
                         alert('macaze puse gresit');
                     }
@@ -54,7 +54,7 @@ $(document).ready(function () {
         turnout.direction = Number($(this).val());
         /* 0 - directa, 1 - abatuta */
         synchronizeTurnouts(turnout.number, turnout.direction);
-        if(make_route == true){
+        if (make_route == true) {
             $.ajax({
                 url: '/command/turnout',
                 type: 'post',
@@ -64,12 +64,9 @@ $(document).ready(function () {
                 success: function (data) {
                     changeRoute(turnout.number, turnout.direction);
                 }
-
             });
         }
-
     });
-
 });
 
 function processSensor(sensor) {
@@ -99,6 +96,7 @@ function processSensor(sensor) {
             } else if (sensor['state'] == 'empty') {
                 $('#track_3_x').attr('src', empty_track_src);
                 $('#track_3_x_between').attr('src', empty_track_src);
+                make_route = false;
                 unblockRoute(1);
             }
             break;
@@ -207,12 +205,12 @@ function synchronizeTurnouts(turnoutNumber, turnoutDirection) {
     switch (turnoutNumber) {
         case 1:
             $('#turnout5_toggle').val(turnoutDirection);
-            if(make_route == true) changeRoute(5, turnoutDirection);
+            if (make_route == true) changeRoute(5, turnoutDirection);
             break;
 
         case 5:
             $('#turnout1_toggle').val(turnoutDirection);
-            if(make_route == true) changeRoute(1, turnoutDirection);
+            if (make_route == true) changeRoute(1, turnoutDirection);
             break;
 
         case 2:
@@ -236,11 +234,32 @@ function blockRoute(firstTurnout) {
 }
 
 function unblockRoute(firstTurnout) {
+    /* in functie de primul macaz calcat, trebuie eliberat si semnalul */
     switch (firstTurnout) {
         case 1:
+            /* trenul a venit dinspre intrare */
             $('#turnout1_toggle').removeAttr('disabled');
             $('#turnout3_toggle').removeAttr('disabled');
             $('#turnout5_toggle').removeAttr('disabled');
+            /* eliberam semnalul */
+            $('#signal_x li[color="green"] span').removeClass('fg-green').addClass('fg-grayLight');
+            $('#signal_x li[color="yellow"] span').removeClass('fg-yellow').addClass('fg-grayLight');
+            $('#signal_x li[color="red"] span').removeClass('fg-grayLight').addClass('fg-red');
+            /* blocam macazul  */
+            if($('#turnout1_toggle').val() == 1) {
+                $('#turnout1_toggle').val(0);
+                $('#turnout1_toggle').attr('disabled', 'disabled');
+                $('#turnout5_toggle').attr('disabled', 'disabled');
+            }
+            else{
+                if($('#turnout3_toggle').val() == 1){
+                    $('#turnout3_toggle').val(0);
+                    $('#turnout3_toggle').attr('disabled', 'disabled');
+                } else{
+                    $('#turnout3_toggle').val(1);
+                    $('#turnout3_toggle').attr('disabled', 'disabled');
+                }
+            }
             break;
     }
 }
