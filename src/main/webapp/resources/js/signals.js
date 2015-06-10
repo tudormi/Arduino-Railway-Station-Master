@@ -81,7 +81,7 @@ function processSensor(sensor) {
                 //trenul intra pe modul, se face parcursul, se coloreaza intarea in rosu
                 $('#track_3_x').attr('src', present_track_src);
                 make_route = true;
-                changeRoute(1, $('#left_turnout_2').val());
+                changeRoute(1, $('#turnout1_toggle').val());
             }
             if (sensor['state'] == 'present' && sensor['orientation'] == 1) {
                 //trenul a ajuns la senzorul dinainte de semnal
@@ -146,11 +146,11 @@ function initializeTurnoutControllers(turnoutNumber) {
 }
 
 function changeRoute(turnoutNumber, direction) {
-    /* use direction = -1 to know that the turnout before the active switch changed */
     var left_turnout_src_route = 'resources/images/left_switch_route.png';
     var left_turnout_src = 'resources/images/left_switch_empty.png';
     var track_src = 'resources/images/track_empty.png';
     var track_src_route = 'resources/images/track_route.png';
+    var track_src_present = 'resources/images/track_present.png';
     var right_turnout_src_route = 'resources/images/right_switch_route.png';
     var right_turnout_src = 'resources/images/right_switch_empty.png';
 
@@ -166,8 +166,10 @@ function changeRoute(turnoutNumber, direction) {
                 $('#track_3_x_between').attr('src', track_src);
             } else {
                 /* directa - remove route from track 2 */
-                $('#left_turnout_2').attr('src', left_turnout_src);
-                $('#track_2').attr('src', track_src);
+                if($('#track_2').attr('src') != track_src_present){
+                    $('#left_turnout_2').attr('src', left_turnout_src);
+                    $('#track_2').attr('src', track_src);
+                }
                 /* put route for turnout 3 */
                 $('#track_3_x_between').attr('src', track_src_route);
             }
@@ -183,11 +185,13 @@ function changeRoute(turnoutNumber, direction) {
                     $('#right_turnout_4').attr('src', right_turnout_src_route);
                     $('#track_4').attr('src', track_src_route);
                     /* remove route from track 3 */
-                    $('#track_3_centre').attr('src', track_src);
+                    if($('#track_3_centre').attr('src') != track_src_present) $('#track_3_centre').attr('src', track_src);
                 } else if (direction === 0) {
                     /* remove route from track 4 and put it to track 3 */
-                    $('#right_turnout_4').attr('src', right_turnout_src);
-                    $('#track_4').attr('src', track_src);
+                    if($('#track_4').attr('src') != track_src_present){
+                        $('#right_turnout_4').attr('src', right_turnout_src);
+                        $('#track_4').attr('src', track_src);
+                    }
                     /* put route for track 3 */
                     $('#track_3_centre').attr('src', track_src_route);
                 }
@@ -195,7 +199,7 @@ function changeRoute(turnoutNumber, direction) {
                 /* remove route starting from this turnout */
                 $('#right_turnout_4').attr('src', right_turnout_src);
                 $('#track_4').attr('src', track_src);
-                $('#track_3_centre').attr('src', track_src);
+                if($('#track_3_centre').attr('src') != track_src_present) $('#track_3_centre').attr('src', track_src);
             }
             break;
     }
