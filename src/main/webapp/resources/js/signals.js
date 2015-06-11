@@ -2,8 +2,30 @@
  * Created by tmatrescu on 5/6/2015.
  */
 
+var left_turnout_src_route = 'resources/images/left_switch_route.png',
+    left_turnout_src_present = 'resources/images/left_switch_present.png',
+    left_turnout_src = 'resources/images/left_switch_empty.png',
+    track_src = 'resources/images/track_empty.png',
+    track_src_route = 'resources/images/track_route.png',
+    track_src_present = 'resources/images/track_present.png',
+    right_turnout_src_route = 'resources/images/right_switch_route.png',
+    right_turnout_src = 'resources/images/right_switch_empty.png',
+    right_turnout_src_present = 'resources/images/right_switch_present.png';
+
 var make_route_x = false;
 var make_route_y = false;
+
+var layoutTracks = {
+    $track_2 : $('#track_2'),
+    $track_4 : $('#track_4'),
+    $track_3_x : $('#track_3_x'),
+    $track_3_centre : $('#track_3_centre'),
+    $track_3_y : $('#track_3_y')
+}
+
+var layoutTurnouts = {
+
+}
 
 $(document).ready(function () {
 
@@ -80,6 +102,24 @@ var turnout = {
     direction: 0
 };
 
+function getCurrentSetTrackX(){
+    if($('#turnout1_toggle').val() == 1){
+        return 2;
+    } else{
+        if($('#turnout3_toggle').val() == 1) return 4;
+        else return 3
+    }
+}
+
+function getCurrentSetTrackY(){
+    if($('#turnout2_toggle').val() == 1){
+        return 4;
+    } else{
+        if($('#turnout4_toggle').val() == 1) return 2;
+        else return 3
+    }
+}
+
 function changeTurnout(number, direction) {
 
     turnout.number = number;
@@ -117,15 +157,11 @@ function initializeTurnoutControllers(turnoutNumber) {
 
 function processSensor(sensor) {
 
-    var present_track_src = 'resources/images/track_present.png';
-    var route_track_src = 'resources/images/track_route.png';
-    var empty_track_src = 'resources/images/track_empty.png';
-
     switch (sensor['track']) {
         case 0:
             if (sensor['state'] == 'present' && sensor['orientation'] == 0) {
                 //trenul intra pe modul, se face parcursul, se coloreaza intarea in rosu
-                $('#track_3_x').attr('src', present_track_src);
+                $('#track_3_x').attr('src', track_src_present);
                 make_route_x = true;
                 changeRoute(1, $('#turnout1_toggle').val());
             }
@@ -134,14 +170,16 @@ function processSensor(sensor) {
                 //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                 //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                 if ($('#turnout1_toggle').val() == 1) {
-                    $('#left_turnout_2').attr('src', present_track_src);
+                    $('#left_turnout_2').attr('src', left_turnout_src_present);
                 }
                 else {
-                    $('#track_3_x_between').attr('src', present_track_src);
+                    $('#track_3_x_between').attr('src', track_src_present);
                 }
             } else if (sensor['state'] == 'empty') {
-                $('#track_3_x').attr('src', empty_track_src);
-                $('#track_3_x_between').attr('src', empty_track_src);
+                //$('#track_3_x').attr('src', empty_track_src);
+                layoutTracks.$track_3_x.attr('src', track_src);
+                $('#track_3_x_between').attr('src', track_src);
+                //layoutTracks.
                 make_route_x = false;
                 unblockRoute(1);
             }
@@ -149,7 +187,8 @@ function processSensor(sensor) {
 
         case 2:
             if (sensor['state'] == 'present' && sensor['orientation'] == 0) {
-                $('#track_2').attr('src', present_track_src);
+                $('#track_2').attr('src', track_src_present);
+                $('#left_')
                 if (sensor['counter'] == 1) {
                     //vine dinspre y
                     //trenul a ajuns la senzorul dinainte de semnal
@@ -158,7 +197,7 @@ function processSensor(sensor) {
                 }
             }
             if (sensor['state'] == 'present' && sensor['orientation'] == 1) {
-                $('#track_2').attr('src', present_track_src);
+                $('#track_2').attr('src', track_src_present);
                 if (sensor['counter'] == 1) {
                     //vine dinspre x
                     //trenul a ajuns la senzorul dinainte de semnal
@@ -171,7 +210,7 @@ function processSensor(sensor) {
         case 3:
 
             if (sensor['state'] == 'present' && sensor['orientation'] == 0) {
-                $('#track_3_centre').attr('src', present_track_src);
+                $('#track_3_centre').attr('src', track_src_present);
                 if (sensor['counter'] == 1) {
                     //vine dinspre y
                     //trenul a ajuns la senzorul dinainte de semnal
@@ -180,7 +219,7 @@ function processSensor(sensor) {
                 }
             }
             if (sensor['state'] == 'present' && sensor['orientation'] == 1) {
-                $('#track_3_centre').attr('src', present_track_src);
+                $('#track_3_centre').attr('src', track_src_present);
                 if (sensor['counter'] == 1) {
                     //vine dinspre x
                     //trenul a ajuns la senzorul dinainte de semnal
@@ -192,7 +231,8 @@ function processSensor(sensor) {
 
         case 4:
             if (sensor['state'] == 'present' && sensor['orientation'] == 0) {
-                $('#track_4').attr('src', present_track_src);
+                $('#track_4').attr('src', track_src_present);
+                $('#right_turnout_4').attr('src', right_turnout_src_present);
                 if (sensor['counter'] == 1) {
                     //vine dinspre y
                     //trenul a ajuns la senzorul dinainte de semnal
@@ -201,7 +241,7 @@ function processSensor(sensor) {
                 }
             }
             if (sensor['state'] == 'present' && sensor['orientation'] == 1) {
-                $('#track_4').attr('src', present_track_src);
+                $('#track_4').attr('src', track_src_present);
                 if (sensor['counter'] == 1) {
                     //vine dinspre x
                     //trenul a ajuns la senzorul dinainte de semnal
@@ -214,7 +254,7 @@ function processSensor(sensor) {
         case 7:
             if (sensor['state'] == 'present' && sensor['orientation'] == 1) {
                 //trenul intra pe modul, se face parcursul, se coloreaza iesirea in rosu
-                $('#track_3_y').attr('src', present_track_src);
+                $('#track_3_y').attr('src', track_src_present);
                 make_route_y = true;
                 changeRoute(2, $('#turnout2_toggle').val());
             }
@@ -223,14 +263,14 @@ function processSensor(sensor) {
                 //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                 //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                 if ($('#turnout2_toggle').val() == 1) {
-                    $('#left_turnout_4').attr('src', present_track_src);
+                    $('#left_turnout_4').attr('src', track_src_present);
                 }
                 else {
-                    $('#track_3_y_between').attr('src', present_track_src);
+                    $('#track_3_y_between').attr('src', track_src_present);
                 }
             } else if (sensor['state'] == 'empty') {
-                $('#track_3_y').attr('src', empty_track_src);
-                $('#track_3_y_between').attr('src', empty_track_src);
+                $('#track_3_y').attr('src', track_src);
+                $('#track_3_y_between').attr('src', track_src);
                 make_route_y = false;
                 unblockRoute(2);
             }
@@ -243,12 +283,14 @@ function processSignal(signal) {
     switch (signal.number) {
         case 0: //semnal de intrare x
             blockRouteForPassingTrain(1);
+            secureOccupiedTrack(getCurrentSetTrackX(), 1);
             $('#signal_x li[color="' + signal.color + '"] span').removeClass('fg-grayLight').addClass('fg-' + signal.color);
             $('#signal_x li[color="red"] span').removeClass('fg-red').addClass('fg-grayLight');
             break;
 
         case 7: //semnal de intrare y
             blockRouteForPassingTrain(2);
+            secureOccupiedTrack(getCurrentSetTrackY(), 0);
             $('#signal_y li[color="' + signal.color + '"] span').removeClass('fg-grayLight').addClass('fg-' + signal.color);
             $('#signal_y li[color="red"] span').removeClass('fg-red').addClass('fg-grayLight');
             break;
@@ -257,14 +299,12 @@ function processSignal(signal) {
 }
 
 function changeRoute(turnoutNumber, direction) {
-    var left_turnout_src_route = 'resources/images/left_switch_route.png';
-    var left_turnout_src = 'resources/images/left_switch_empty.png';
-    var track_src = 'resources/images/track_empty.png';
-    var track_src_route = 'resources/images/track_route.png';
-    var track_src_present = 'resources/images/track_present.png';
-    var right_turnout_src_route = 'resources/images/right_switch_route.png';
-    var right_turnout_src = 'resources/images/right_switch_empty.png';
 
+    //trebuie luata linia curent, si colorat pt fiecare
+    //se verifica daca linia e ocupata sau nu
+
+    var currentSetTrackX = getCurrentSetTrackX();
+    var currentSetTrackY = getCurrentSetTrackY();
 
     switch (turnoutNumber) {
 
@@ -404,12 +444,12 @@ function secureOccupiedTrack(trackNumber, direction) {
             if (direction == 0) {//trenul vine dinspre y, blocam x-ul
                 changeTurnout(1, 0);
                 changeTurnout(5, 0);
-                $('#turnout4_toggle').attr({disabled: 'disabled', blocked: true});
+                $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
                 $('#turnout5_toggle').attr({disabled: 'disabled', blocked: true});
             }
-            else {
+            else { //trenul vine dinspre x, blocam y-ul
                 changeTurnout(4, 0);
-                $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
+                $('#turnout4_toggle').attr({disabled: 'disabled', blocked: true});
             }
             break;
 
@@ -417,8 +457,7 @@ function secureOccupiedTrack(trackNumber, direction) {
             if (direction == 0) {//trenul vine dinspre y, blocam x-ul
                 changeTurnout(3, 1);
                 $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
-            } else {
-                changeTurnout(2, 1);
+            } else { //trenul vine dinspre x, blocam y-ul
                 changeTurnout(4, 1);
                 $('#turnout4_toggle').attr({disabled: 'disabled', blocked: true});
             }
@@ -427,12 +466,12 @@ function secureOccupiedTrack(trackNumber, direction) {
 
         case 4:
             if (direction == 0) {//trenul vine dinspre y, blocam x-ul
-                changeTurnout(1, 0);
                 changeTurnout(3, 0);
-                $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
                 $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
-            } else {
+            } else { //trenul vine dinspre x, blocam y-ul
+                changeTurnout(2, 0);
                 changeTurnout(6, 0);
+                $('#turnout2_toggle').attr({disabled: 'disabled', blocked: true});
                 $('#turnout6_toggle').attr({disabled: 'disabled', blocked: true});
             }
             break;
@@ -456,17 +495,7 @@ function unblockRoute(firstTurnout) {
             $('#signal_x li[color="green"] span').removeClass('fg-green').addClass('fg-grayLight');
             $('#signal_x li[color="yellow"] span').removeClass('fg-yellow').addClass('fg-grayLight');
             $('#signal_x li[color="red"] span').removeClass('fg-grayLight').addClass('fg-red');
-
-            /* blocam macazele dinspre intrare si iesire */
-            if ($('#turnout1_toggle').val() == 1) {
-                secureOccupiedTrack(2, 0); //s-a ocupat linia 2
-            } else {
-                if ($('#turnout3_toggle').val() == 1) {
-                    secureOccupiedTrack(4, 0); //s-a ocupat linia 4
-                } else {
-                    secureOccupiedTrack(3, 0); // s-a ocupat linia 3
-                }
-            }
+            secureOccupiedTrack(getCurrentSetTrackX(), 0);
             break;
 
         case 2:
@@ -474,18 +503,7 @@ function unblockRoute(firstTurnout) {
             $('#signal_y li[color="green"] span').removeClass('fg-green').addClass('fg-grayLight');
             $('#signal_y li[color="yellow"] span').removeClass('fg-yellow').addClass('fg-grayLight');
             $('#signal_y li[color="red"] span').removeClass('fg-grayLight').addClass('fg-red');
-
-            /* blocam macazele dinspre intrare si iesire asigurand linia ocupata*/
-            if ($('#turnout2_toggle').val() == 1) {
-                secureOccupiedTrack(4, 1); //s-a ocupat linia 4
-            } else {
-                if ($('#turnout4_toggle').val() == 1) {
-                    secureOccupiedTrack(2, 1); // s-a ocupat linia 2
-                } else {
-                    secureOccupiedTrack(3, 1); //s-a ocaupat linia 3
-                }
-            }
-            break;
+            secureOccupiedTrack(getCurrentSetTrackY(), 1);
     }
     enableAvailableTurnouts();
 }
