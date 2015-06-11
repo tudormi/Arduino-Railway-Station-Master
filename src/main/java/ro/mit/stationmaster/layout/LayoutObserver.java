@@ -59,7 +59,12 @@ public class LayoutObserver {
                 irSensorDTO = new IRSensorDTO(0, "present", sensor.getOrientation(), 0);
                 queue.add(irSensorDTO);
                 return irSensorDTO;
-//                break;
+
+            case 7:
+                tracks.get(7).setState("present");
+                irSensorDTO = new IRSensorDTO(7, "present", sensor.getOrientation(), 0);
+                queue.add(irSensorDTO);
+                return irSensorDTO;
 
             case 1:
             case 2:
@@ -103,7 +108,7 @@ public class LayoutObserver {
     }
 
     public void updateLayout(Turnout turnout) {
-//        System.out.println("Turnout " + turnout.getNumber() + " changed to [" + turnout.getDirection() + "]");
+        turnouts.get(turnout.getNumber()-1).setDirection(turnout.getDirection());
     }
 
     public int checkCommandValidity(TrackDTO trackDTO) {
@@ -121,58 +126,73 @@ public class LayoutObserver {
         return 1;
     }
 
-    public int checkCommandValidity(Turnout turnout) {
-
-        switch (turnout.getNumber()) {
-            case 1:
-                if (turnout.getDirection() == 1 && tracks.get(2).getState().equals("present") && tracks.get(0).getState().equals("present")) {
-                    /* linia 2 este ocupata si intrarea, macazele nu se pot schimba */
-                    return 0;
-                } else {
-                    /* one of the line is not occupied and the turnouts are ok to change */
-                    updateLayout(turnout);
-                    turnout.setNumber(5);
-                    updateLayout(turnout);
-                }
-                break;
-
-            case 5:
-                if (turnout.getDirection() == 1 && tracks.get(2).getState().equals("present") && tracks.get(0).getState().equals("present")) {
-                    /* linia 2 este ocupata si intrarea, macazele nu se pot schimba */
-                    return 0;
-                } else {
-                    /* one of the line is not occupied and the turnouts are ok to change */
-                    updateLayout(turnout);
-                    turnout.setNumber(1);
-                    updateLayout(turnout);
-                }
-                break;
-        }
-
-        return 1;
-    }
+//    public int checkCommandValidity(Turnout turnout) {
+//
+//        switch (turnout.getNumber()) {
+//            case 1:
+//                updateLayout(turnout);
+//                break;
+//
+//            case 2:
+//                updateLayout(turnout);
+//
+//            case 5:
+//                updateLayout(turnout);
+//                turnout.setNumber(1);
+//                updateLayout(turnout);
+//                break;
+//        }
+//
+//        return 1;
+//    }
 
     public int checkCommandValidity(Signal signal) {
 
         switch (signal.getNumber()) {
             case 0: //linia de intrare
-                if (tracks.get(1).getState().equals("present") && tracks.get(2).getState().equals("present") && tracks.get(3).getState().equals("present")) {
-                    return 0; // toate liniile din statie sunt ocupate
+                if(signal.getColor().equals("green") || signal.getColor().equals("yellow")){
+                    if (tracks.get(1).getState().equals("present") && tracks.get(2).getState().equals("present") && tracks.get(3).getState().equals("present")) {
+                        return 0; // toate liniile din statie sunt ocupate
+                    }
+                    if (turnouts.get(0).getDirection() == 1 && tracks.get(2).getState().equals("present")) {
+                        return 0; //incearca sa puna macazul 1 pe abatuta dar linia 2 este ocupata
+                    } else if(turnouts.get(0).getDirection() == 0){
+                        if (turnouts.get(2).getDirection() == 0 && tracks.get(3).getState().equals("present")) {
+                            return 0; //macazul 1 pe direct, macazul 3 pe directa, dar linia 3 este ocupata
+                        } else if (turnouts.get(2).getDirection() == 1 && tracks.get(4).getState().equals("present")) {
+                            return 0; //macazul 3 pe abatuta, dar linia 4 ocupata
+                        }
+                    }
+                    // succes la punerea semnalului pe verde
+                    if (turnouts.get(0).getDirection() == 1) tracks.get(2).setState("present");
+                    else if (turnouts.get(2).getDirection() == 0) tracks.get(3).setState("present");
+                    else tracks.get(4).setState("present");
+                    return 1;
                 }
-                if (turnouts.get(0).getDirection() == 1 && tracks.get(2).getState().equals("present")) {
-                    return 0; //incearca sa puna macazul 1 pe abatuta dar linia 2 este ocupata
-                } else if (turnouts.get(2).getDirection() == 0 && tracks.get(3).getState().equals("present")) {
-                    return 0; //macazul 1 pe direct, macazul 3 pe directa, dar linia 3 este ocupata
-                } else if (turnouts.get(2).getDirection() == 1 && tracks.get(4).getState().equals("present")) {
-                    return 0; //macazul 3 pe abatuta, dar linia 4 ocupata
-                }
-                // succes la punerea semnalului pe verde
-                if (turnouts.get(0).getDirection() == 1) tracks.get(2).setState("present");
-                else if (turnouts.get(2).getDirection() == 0) tracks.get(3).setState("present");
-                else tracks.get(4).setState("present");
-                return 1;
-        }
+                else return 0;
 
+            case 7: //linia de iesire
+                if(signal.getColor().equals("green") || signal.getColor().equals("yellow")){
+                    if (tracks.get(1).getState().equals("present") && tracks.get(2).getState().equals("present") && tracks.get(3).getState().equals("present")) {
+                        return 0; // toate liniile din statie sunt ocupate
+                    }
+                    if (turnouts.get(1).getDirection() == 1 && tracks.get(4).getState().equals("present")) {
+                        return 0; //incearca sa puna macazul 2 pe abatuta dar linia 4 este ocupata
+                    } else if(turnouts.get(1).getDirection() == 0){
+                        if (turnouts.get(3).getDirection() == 0 && tracks.get(3).getState().equals("present")) {
+                            return 0; //macazul 2 pe direct, macazul 4 pe directa, dar linia 3 este ocupata
+                        } else if (turnouts.get(3).getDirection() == 1 && tracks.get(2).getState().equals("present")) {
+                            return 0; //macazul 4 pe abatuta, dar linia 2 ocupata
+                        }
+                    }
+                    // succes la punerea semnalului pe verde
+                    if (turnouts.get(1).getDirection() == 1) tracks.get(4).setState("present");
+                    else if (turnouts.get(3).getDirection() == 0) tracks.get(3).setState("present");
+                    else tracks.get(2).setState("present");
+                    return 1;
+                }
+                else return 0;
+        }
         return 0;
     }
 

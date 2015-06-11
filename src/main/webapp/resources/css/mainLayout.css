@@ -60,12 +60,20 @@
     width: auto;
 }
 
-#signal_y2 li, #signal_x li{
+#signal_y{
+    display: block;
+    position: absolute;
+    top: 120px;
+    right: 40px;
+    width: auto;
+}
+
+#signal_y2 li, #signal_x li, #signal_y li{
     margin: 0 11px 0 0;
     width: auto;
 }
 
-#signal_y2 li a, #signal_x li a{
+#signal_y2 li a, #signal_x li a, #signal_y li a{
     padding: 1px 4px;
 }
 

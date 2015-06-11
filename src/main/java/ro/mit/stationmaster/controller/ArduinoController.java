@@ -17,10 +17,6 @@ import ro.mit.stationmaster.layout.Turnout;
 import ro.mit.stationmaster.service.SensorUpdateService;
 import ro.mit.stationmaster.utils.SerialComm;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 
 /**
  * Created by tmatrescu on 11/5/2015.
@@ -48,21 +44,21 @@ public class ArduinoController {
 
     @RequestMapping(value = "/turnout", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public int sendTurnoutCommand(@RequestBody Turnout turnout){
-        return layoutObserver.checkCommandValidity(turnout);
+    public int sendTurnoutCommand(@RequestBody Turnout turnout) {
+        layoutObserver.updateLayout(turnout);
 //        if(turnout.getNumber() == 1 || turnout.getNumber()==5)return 0;
-//        else return 1;
+        return 1;
     }
 
     @RequestMapping(value = "/signal", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public int sendSignalCommand(@RequestBody Signal signal){
+    public int sendSignalCommand(@RequestBody Signal signal) {
         return layoutObserver.checkCommandValidity(signal);
     }
 
     @RequestMapping(value = "/getSensor", method = RequestMethod.GET)
     @ResponseBody
-    public DeferredResult<IRSensorDTO> getSensors(){
+    public DeferredResult<IRSensorDTO> getSensors() {
         final DeferredResult<IRSensorDTO> deferredResult = new DeferredResult<IRSensorDTO>();
         sensorUpdateService.getUpdate(deferredResult);
         return deferredResult;
@@ -70,17 +66,16 @@ public class ArduinoController {
 
     @RequestMapping(value = "/localStorage", method = RequestMethod.GET)
     @ResponseBody
-    public int localStorage(){
-        if(layoutObserver.getLocalStorageClearFlag() == 0) {
+    public int localStorage() {
+        if (layoutObserver.getLocalStorageClearFlag() == 0) {
             layoutObserver.setLocalStorageClearFlag(1);
             return 0;
-        }
-        else return 1;
+        } else return 1;
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public IRSensorDTO test(@RequestBody IRSensor irSensor){
+    public IRSensorDTO test(@RequestBody IRSensor irSensor) {
         return layoutObserver.updateLayoutFromArduino(irSensor);
 //        return 1;
     }

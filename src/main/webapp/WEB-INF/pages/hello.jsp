@@ -42,14 +42,14 @@
             </div>
             <div class="spatiu">
                 <div class="turnout_toggle_wrapper">
-                    <div id="turnout1_toggle" class="turnout_toggle" turnoutNumber="1"></div>
+                    <div id="turnout1_toggle" class="turnout_toggle" turnoutNumber="1" blocked="false"></div>
                 </div>
                 <div class="turnout_toggle_wrapper">
-                    <div id="turnout5_toggle" class="turnout_toggle" turnoutNumber="5"></div>
+                    <div id="turnout5_toggle" class="turnout_toggle" turnoutNumber="5" blocked="false"></div>
                 </div>
                 <img class="turnout" id="left_turnout_2" src="resources/images/left_switch_empty.png">
                 <div class="turnout_toggle_wrapper">
-                    <div id="turnout4_toggle" class="turnout_toggle" turnoutNumber="4"></div>
+                    <div id="turnout4_toggle" class="turnout_toggle" turnoutNumber="4" blocked="false"></div>
                 </div>
                 <img class="turnout" id="right_turnout_2" src="resources/images/right_switch_empty.png">
             </div>
@@ -65,17 +65,23 @@
                 <img class ="track" id='track_3_centre' src="resources/images/track_empty.png">
                 <img class ="track" id="track_3_y_between" src="resources/images/track_empty.png">
                 <img class ="track" id='track_3_y' src="resources/images/track_empty.png">
+                <ul class="breadcrumbs2 mini signal" id="signal_y" type="0" number="7">
+                    <li><a href="#"><span class="mif-traff fg-black"></span></a></li>
+                    <li color="green"><a href="#"><span class="mif-contrast fg-grayLight"></span></a></li>
+                    <li color="yellow"><a href="#"><span class="mif-contrast fg-grayLight"></span></a></li>
+                    <li color="red"><a href="#"><span class="mif-contrast fg-red"></span></a></li>
+                </ul>
             </div>
             <div class="spatiu">
                 <div class="turnout_toggle_wrapper">
-                    <div id="turnout3_toggle" class="turnout_toggle" turnoutNumber="3"></div>
+                    <div id="turnout3_toggle" class="turnout_toggle" turnoutNumber="3" blocked="false"></div>
                 </div>
                 <img class="turnout" id="right_turnout_4" src="resources/images/right_switch_empty.png">
                 <div class="turnout_toggle_wrapper">
-                    <div id="turnout6_toggle" class="turnout_toggle" turnoutNumber="6"></div>
+                    <div id="turnout6_toggle" class="turnout_toggle" turnoutNumber="6" blocked="false"></div>
                 </div>
                 <div class="turnout_toggle_wrapper">
-                    <div id="turnout2_toggle" class="turnout_toggle" turnoutNumber="2"></div>
+                    <div id="turnout2_toggle" class="turnout_toggle" turnoutNumber="2" blocked="false"></div>
                 </div>
                 <img class="turnout" id="left_turnout_4" src="resources/images/left_switch_empty.png">
             </div>
