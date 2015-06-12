@@ -12,6 +12,12 @@ public class Signal {
     public Signal() {
     }
 
+    public Signal(int number, int type, String color) {
+        this.number = number;
+        this.type = type;
+        this.color = color;
+    }
+
     public int getNumber() {
         return number;
     }
@@ -34,5 +40,27 @@ public class Signal {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Signal signal = (Signal) o;
+
+        if (number != signal.number) return false;
+        if (type != signal.type) return false;
+        if (!color.equals(signal.color)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = number;
+        result = 31 * result + type;
+        result = 31 * result + color.hashCode();
+        return result;
     }
 }

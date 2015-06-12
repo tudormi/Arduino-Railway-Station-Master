@@ -44,7 +44,7 @@
     display: inline-block;
 }
 
-#signal_y2{
+#signal2_y{
     display: block;
     position: absolute;
     top:50px;
@@ -52,7 +52,7 @@
     width: auto;
 }
 
-#signal_x{
+#signal0_x{
     display: block;
     position: absolute;
     top: 170px;
@@ -60,7 +60,47 @@
     width: auto;
 }
 
-#signal_y{
+#signal2_x{
+    display: block;
+    position: absolute;
+    top: 100px;
+    right: 405px;
+    width: auto;
+}
+
+#signal3_x{
+    display: block;
+    position: absolute;
+    top: 170px;
+    right: 405px;
+    width: auto;
+}
+
+#signal3_y{
+    display: block;
+    position: absolute;
+    top: 120px;
+    left: 410px;
+    width: auto;
+}
+
+#signal4_x{
+    display: block;
+    position: absolute;
+    top: 243px;
+    right: 405px;
+    width: auto;
+}
+
+#signal4_y{
+    display: block;
+    position: absolute;
+    top: 193px;
+    left: 410px;
+    width: auto;
+}
+
+#signal7_y{
     display: block;
     position: absolute;
     top: 120px;
@@ -68,12 +108,12 @@
     width: auto;
 }
 
-#signal_y2 li, #signal_x li, #signal_y li{
+#signal2_y li, #signal0_x li, #signal7_y li, #signal3_x li, #signal3_y li, #signal2_x li, #signal4_y li, #signal4_x li{
     margin: 0 11px 0 0;
     width: auto;
 }
 
-#signal_y2 li a, #signal_x li a, #signal_y li a{
+#signal2_y li a, #signal0_x li a, #signal7_y li a , #signal3_x li a, #signal3_y li a, #signal2_x li a, #signal4_y li a, #signal4_x li a{
     padding: 1px 4px;
 }
 
@@ -142,6 +182,7 @@
     border: 1px solid red;
     margin: 0 auto;
     min-width:1000px;
+    min-height: 300px;
 }
 
 #station_scheme > div{
@@ -211,7 +252,7 @@
 
 #track_46 > img{
     position: absolute;
-    bottom: 9px;
+    bottom: 49px;
 }
 
 #track_4{

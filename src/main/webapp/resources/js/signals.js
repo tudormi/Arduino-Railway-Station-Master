@@ -15,18 +15,6 @@ var left_turnout_src_route = 'resources/images/left_switch_route.png',
 var make_route_x = false;
 var make_route_y = false;
 
-var layoutTracks = {
-    $track_2 : $('#track_2'),
-    $track_4 : $('#track_4'),
-    $track_3_x : $('#track_3_x'),
-    $track_3_centre : $('#track_3_centre'),
-    $track_3_y : $('#track_3_y')
-}
-
-var layoutTurnouts = {
-
-}
-
 $(document).ready(function () {
 
     initializeTurnoutControllers(1);
@@ -42,7 +30,7 @@ $(document).ready(function () {
         color: 'nothing'
     };
 
-    $('#signal_x li').on('click', function () {
+    $('#signal0_x li').on('click', function () {
         signal.number = Number($(this).parent().attr('number'));
         signal.type = Number($(this).parent().attr('type'));
         signal.color = $(this).attr('color');
@@ -65,7 +53,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#signal_y li').on('click', function () {
+    $('#signal7_y li').on('click', function () {
         signal.number = Number($(this).parent().attr('number'));
         signal.type = Number($(this).parent().attr('type'));
         signal.color = $(this).attr('color');
@@ -92,7 +80,7 @@ $(document).ready(function () {
         var number = Number($(this).attr('turnoutNumber'));
         var direction = Number($(this).val());
         /* 0 - directa, 1 - abatuta */
-        changeTurnout(number, direction);
+        changeTurnoutForRouting(number, direction);
         synchronizeTurnouts(number, direction);
     });
 });
@@ -102,26 +90,25 @@ var turnout = {
     direction: 0
 };
 
-function getCurrentSetTrackX(){
-    if($('#turnout1_toggle').val() == 1){
+function getCurrentSetTrackX() {
+    if ($('#turnout1_toggle').val() == 1) {
         return 2;
-    } else{
-        if($('#turnout3_toggle').val() == 1) return 4;
+    } else {
+        if ($('#turnout3_toggle').val() == 1) return 4;
         else return 3
     }
 }
 
-function getCurrentSetTrackY(){
-    if($('#turnout2_toggle').val() == 1){
+function getCurrentSetTrackY() {
+    if ($('#turnout2_toggle').val() == 1) {
         return 4;
-    } else{
-        if($('#turnout4_toggle').val() == 1) return 2;
+    } else {
+        if ($('#turnout4_toggle').val() == 1) return 2;
         else return 3
     }
 }
 
-function changeTurnout(number, direction) {
-
+function changeTurnoutForRouting(number, direction) {
     turnout.number = number;
     turnout.direction = direction;
 
@@ -138,6 +125,21 @@ function changeTurnout(number, direction) {
             }
         });
     }
+}
+
+function onlyNotifyServerOnTurnoutChange(number, direction) {
+    turnout.number = number;
+    turnout.direction = direction;
+    $.ajax({
+        url: '/command/turnout',
+        type: 'post',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(turnout),
+        success: function (data) {
+            console.log('notified');
+        }
+    });
 }
 
 function initializeTurnoutControllers(turnoutNumber) {
@@ -159,8 +161,7 @@ function processSensor(sensor) {
 
     switch (sensor['track']) {
         case 0:
-            if (sensor['state'] == 'present' && sensor['orientation'] == 0) {
-                //trenul intra pe modul, se face parcursul, se coloreaza intarea in rosu
+            if (sensor['state'] == 'present' && sensor['orientation'] == 0) { //trenul intra dinspre X, se face parcursul, se coloreaza intarea in rosu
                 $('#track_3_x').attr('src', track_src_present);
                 make_route_x = true;
                 changeRoute(1, $('#turnout1_toggle').val());
@@ -176,10 +177,10 @@ function processSensor(sensor) {
                     $('#track_3_x_between').attr('src', track_src_present);
                 }
             } else if (sensor['state'] == 'empty') {
-                //$('#track_3_x').attr('src', empty_track_src);
-                layoutTracks.$track_3_x.attr('src', track_src);
+                $('#track_3_x').attr('src', track_src);
                 $('#track_3_x_between').attr('src', track_src);
-                //layoutTracks.
+                $('#left_turnout_2').attr('src', left_turnout_src);
+                $('#right_turnout_4').attr('src', right_turnout_src);
                 make_route_x = false;
                 unblockRoute(1);
             }
@@ -188,7 +189,7 @@ function processSensor(sensor) {
         case 2:
             if (sensor['state'] == 'present' && sensor['orientation'] == 0) {
                 $('#track_2').attr('src', track_src_present);
-                $('#left_')
+                $('#left_turnout_2').attr('src', left_turnout_src_present);
                 if (sensor['counter'] == 1) {
                     //vine dinspre y
                     //trenul a ajuns la senzorul dinainte de semnal
@@ -198,6 +199,7 @@ function processSensor(sensor) {
             }
             if (sensor['state'] == 'present' && sensor['orientation'] == 1) {
                 $('#track_2').attr('src', track_src_present);
+                $('#right_turnout_2').attr('src', right_turnout_src_present);
                 if (sensor['counter'] == 1) {
                     //vine dinspre x
                     //trenul a ajuns la senzorul dinainte de semnal
@@ -242,6 +244,7 @@ function processSensor(sensor) {
             }
             if (sensor['state'] == 'present' && sensor['orientation'] == 1) {
                 $('#track_4').attr('src', track_src_present);
+                $('#left_turnout_4').attr('src', left_turnout_src_present);
                 if (sensor['counter'] == 1) {
                     //vine dinspre x
                     //trenul a ajuns la senzorul dinainte de semnal
@@ -263,7 +266,7 @@ function processSensor(sensor) {
                 //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                 //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                 if ($('#turnout2_toggle').val() == 1) {
-                    $('#left_turnout_4').attr('src', track_src_present);
+                    $('#left_turnout_4').attr('src', left_turnout_src_present);
                 }
                 else {
                     $('#track_3_y_between').attr('src', track_src_present);
@@ -271,6 +274,8 @@ function processSensor(sensor) {
             } else if (sensor['state'] == 'empty') {
                 $('#track_3_y').attr('src', track_src);
                 $('#track_3_y_between').attr('src', track_src);
+                $('#left_turnout_4').attr('src', left_turnout_src);
+                $('#right_turnout_2').attr('src', right_turnout_src);
                 make_route_y = false;
                 unblockRoute(2);
             }
@@ -278,31 +283,37 @@ function processSensor(sensor) {
     }
 }
 
+function setSignalColor(signal){
+    var orientation;
+    if(signal.type == 0) orientation = 'x';
+    else orientation = 'y';
+
+    var signalId = '#signal' + signal.number + '_' + orientation;
+    var currentColor = $(signalId).attr('state');
+    $(signalId + ' li[color="' + signal.color + '"] span').removeClass('fg-grayLight').addClass('fg-' + signal.color);
+    $(signalId + ' li[color="' + currentColor + '"] span').removeClass('fg-' + currentColor).addClass('fg-grayLight');
+    $(signalId).attr('state', signal.color);
+}
+
 function processSignal(signal) {
 
     switch (signal.number) {
         case 0: //semnal de intrare x
+            setSignalColor(signal);
             blockRouteForPassingTrain(1);
             secureOccupiedTrack(getCurrentSetTrackX(), 1);
-            $('#signal_x li[color="' + signal.color + '"] span').removeClass('fg-grayLight').addClass('fg-' + signal.color);
-            $('#signal_x li[color="red"] span').removeClass('fg-red').addClass('fg-grayLight');
             break;
 
         case 7: //semnal de intrare y
+            setSignalColor(signal);
             blockRouteForPassingTrain(2);
             secureOccupiedTrack(getCurrentSetTrackY(), 0);
-            $('#signal_y li[color="' + signal.color + '"] span').removeClass('fg-grayLight').addClass('fg-' + signal.color);
-            $('#signal_y li[color="red"] span').removeClass('fg-red').addClass('fg-grayLight');
             break;
     }
 
 }
 
 function changeRoute(turnoutNumber, direction) {
-
-    //trebuie luata linia curent, si colorat pt fiecare
-    //se verifica daca linia e ocupata sau nu
-
     var currentSetTrackX = getCurrentSetTrackX();
     var currentSetTrackY = getCurrentSetTrackY();
 
@@ -395,25 +406,25 @@ function synchronizeTurnouts(turnoutNumber, turnoutDirection) {
     switch (turnoutNumber) {
         case 1:
             $('#turnout5_toggle').val(turnoutDirection);
-            changeTurnout(5, turnoutDirection);
+            changeTurnoutForRouting(5, turnoutDirection);
             if (make_route_x == true) changeRoute(5, turnoutDirection);
             break;
 
         case 5:
             $('#turnout1_toggle').val(turnoutDirection);
-            changeTurnout(1, turnoutDirection);
+            changeTurnoutForRouting(1, turnoutDirection);
             if (make_route_x == true) changeRoute(1, turnoutDirection);
             break;
 
         case 2:
             $('#turnout6_toggle').val(turnoutDirection);
-            changeTurnout(6, turnoutDirection);
+            changeTurnoutForRouting(6, turnoutDirection);
             if (make_route_y == true) changeRoute(6, turnoutDirection);
             break;
 
         case 6:
             $('#turnout2_toggle').val(turnoutDirection);
-            changeTurnout(2, turnoutDirection);
+            changeTurnoutForRouting(2, turnoutDirection);
             if (make_route_y == true) changeRoute(2, turnoutDirection);
             break;
     }
@@ -442,35 +453,42 @@ function secureOccupiedTrack(trackNumber, direction) {
     switch (trackNumber) {
         case 2:
             if (direction == 0) {//trenul vine dinspre y, blocam x-ul
-                changeTurnout(1, 0);
-                changeTurnout(5, 0);
+                $('#turnout1_toggle').val(0);
+                onlyNotifyServerOnTurnoutChange(1, 0);
+                $('#turnout5_toggle').val(0);
+                onlyNotifyServerOnTurnoutChange(5, 0);
                 $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
                 $('#turnout5_toggle').attr({disabled: 'disabled', blocked: true});
             }
             else { //trenul vine dinspre x, blocam y-ul
-                changeTurnout(4, 0);
+                $('#turnout4_toggle').val(0);
+                onlyNotifyServerOnTurnoutChange(4, 0);
                 $('#turnout4_toggle').attr({disabled: 'disabled', blocked: true});
             }
             break;
 
         case 3:
             if (direction == 0) {//trenul vine dinspre y, blocam x-ul
-                changeTurnout(3, 1);
+                $('#turnout3_toggle').val(1);
+                onlyNotifyServerOnTurnoutChange(3, 1);
                 $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
             } else { //trenul vine dinspre x, blocam y-ul
-                changeTurnout(4, 1);
+                $('#turnout4_toggle').val(1);
+                onlyNotifyServerOnTurnoutChange(4, 1);
                 $('#turnout4_toggle').attr({disabled: 'disabled', blocked: true});
             }
-
             break;
 
         case 4:
             if (direction == 0) {//trenul vine dinspre y, blocam x-ul
-                changeTurnout(3, 0);
+                $('#turnout3_toggle').val(0);
+                onlyNotifyServerOnTurnoutChange(3, 0);
                 $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
             } else { //trenul vine dinspre x, blocam y-ul
-                changeTurnout(2, 0);
-                changeTurnout(6, 0);
+                $('#turnout2_toggle').val(0);
+                onlyNotifyServerOnTurnoutChange(2, 0);
+                $('#turnout6_toggle').val(0);
+                onlyNotifyServerOnTurnoutChange(6, 0);
                 $('#turnout2_toggle').attr({disabled: 'disabled', blocked: true});
                 $('#turnout6_toggle').attr({disabled: 'disabled', blocked: true});
             }
@@ -479,12 +497,12 @@ function secureOccupiedTrack(trackNumber, direction) {
 }
 
 function enableAvailableTurnouts() {
-    if ($('#turnout1_toggle').attr('blocked') == false) $('#turnout1_toggle').removeAttr('disabled');
-    if ($('#turnout2_toggle').attr('blocked') == false) $('#turnout2_toggle').removeAttr('disabled');
-    if ($('#turnout3_toggle').attr('blocked') == false) $('#turnout3_toggle').removeAttr('disabled');
-    if ($('#turnout4_toggle').attr('blocked') == false) $('#turnout4_toggle').removeAttr('disabled');
-    if ($('#turnout5_toggle').attr('blocked') == false) $('#turnout5_toggle').removeAttr('disabled');
-    if ($('#turnout6_toggle').attr('blocked') == false) $('#turnout6_toggle').removeAttr('disabled');
+    if ($('#turnout1_toggle').attr('blocked') == 'false') $('#turnout1_toggle').removeAttr('disabled');
+    if ($('#turnout2_toggle').attr('blocked') == 'false') $('#turnout2_toggle').removeAttr('disabled');
+    if ($('#turnout3_toggle').attr('blocked') == 'false') $('#turnout3_toggle').removeAttr('disabled');
+    if ($('#turnout4_toggle').attr('blocked') == 'false') $('#turnout4_toggle').removeAttr('disabled');
+    if ($('#turnout5_toggle').attr('blocked') == 'false') $('#turnout5_toggle').removeAttr('disabled');
+    if ($('#turnout6_toggle').attr('blocked') == 'false') $('#turnout6_toggle').removeAttr('disabled');
 }
 
 function unblockRoute(firstTurnout) {
@@ -504,6 +522,7 @@ function unblockRoute(firstTurnout) {
             $('#signal_y li[color="yellow"] span').removeClass('fg-yellow').addClass('fg-grayLight');
             $('#signal_y li[color="red"] span').removeClass('fg-grayLight').addClass('fg-red');
             secureOccupiedTrack(getCurrentSetTrackY(), 1);
+            break;
     }
     enableAvailableTurnouts();
 }
