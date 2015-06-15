@@ -70,6 +70,9 @@ $(window).on('beforeunload', function(){
     localStorage.setItem('track1_speed_control', Number($('#track1_speed_control').val()));
     localStorage.setItem('track2_direction_toggle', $('#track2_direction_toggle').val());
     localStorage.setItem('track2_speed_control', Number($('#track2_speed_control').val()));
+
+    localStorage.setItem('make_route_x', make_route_x);
+    localStorage.setItem('make_route_y', make_route_y);
 });
 
 function getTurnoutState(turnoutNumber){

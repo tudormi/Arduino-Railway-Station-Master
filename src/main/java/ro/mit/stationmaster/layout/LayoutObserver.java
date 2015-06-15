@@ -157,8 +157,8 @@ public class LayoutObserver {
 //                    else tracks.get(4).setState("present");
                     StringBuilder stringKey = new StringBuilder();
                     stringKey.append("signal").append(signal.getNumber());
-                    if(signal.getType() == 0) stringKey.append("x");
-                    else stringKey.append("y");
+                    if(signal.getType() == 0) stringKey.append("_x");
+                    else stringKey.append("_y");
                     signals.get(stringKey.toString()).setColor(signal.getColor());
                     return 1;
                 } else return 0;
@@ -182,8 +182,8 @@ public class LayoutObserver {
                     // s-a reusit punerea semnalului pe liber
                     StringBuilder stringKey = new StringBuilder();
                     stringKey.append("signal").append(signal.getNumber());
-                    if(signal.getType() == 0) stringKey.append("x");
-                    else stringKey.append("y");
+                    if(signal.getType() == 0) stringKey.append("_x");
+                    else stringKey.append("_y");
                     signals.get(stringKey.toString()).setColor(signal.getColor());
                     return 1;
                 }
@@ -206,12 +206,6 @@ public class LayoutObserver {
                     else stringKey.append("_y");
                     signals.get(stringKey.toString()).setColor(signal.getColor());
                     return 1;
-
-                    // succes la punerea semnalului pe verde
-//                    if (turnouts.get(1).getDirection() == 1) tracks.get(4).setState("present");
-//                    else if (turnouts.get(3).getDirection() == 0) tracks.get(3).setState("present");
-//                    else tracks.get(2).setState("present");
-//                    return 1;
                 } else return 0;
         }
         return 0;
