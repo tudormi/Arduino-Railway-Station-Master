@@ -73,15 +73,57 @@ public class LayoutObserver {
         int trackNumber = sensor.getTrack();
         switch (trackNumber) {
             case 0:
-                tracks.get(0).setState("present");
-                irSensorDTO = new IRSensorDTO(0, "present", sensor.getOrientation(), 0);
-                queue.add(irSensorDTO);
+                if (sensor.getOrientation() == 0) { //senzorul de la intrarea pe modul
+                    if (tracks.get(0).getSensorCounter() == 0) {//trenul a intrat pe modul
+                        tracks.get(0).setState("present");
+                        tracks.get(0).setSensorCounter(1);
+                        irSensorDTO = new IRSensorDTO(0, "present", sensor.getOrientation(), 1);
+                        queue.add(irSensorDTO);
+                    } else { //trenul paraseste modulul
+                        tracks.get(0).setState("empty");
+                        tracks.get(0).setSensorCounter(0);
+                        irSensorDTO = new IRSensorDTO(0, "empty", sensor.getOrientation(), 0);
+                        queue.add(irSensorDTO);
+                    }
+                } else { //senzorul de dinainte de macaze
+                    if (tracks.get(0).getSensorCounter() == 0) { // trenul iese din statie si eliberam linia ocupata
+                        tracks.get(getCurrentTrackX()).setState("empty");
+                        tracks.get(getCurrentTrackX()).setSensorCounter(0);
+                        tracks.get(0).setSensorCounter(1);
+                        irSensorDTO = new IRSensorDTO(0, "present", sensor.getOrientation(), 1);
+                        queue.add(irSensorDTO);
+                    } else { //trenul intra in statie, nu trimitem decat o notificare si trimitem din interfata scaderea vitezei
+                        irSensorDTO = new IRSensorDTO(0, "present", sensor.getOrientation(), 0);
+                        queue.add(irSensorDTO);
+                    }
+                }
                 return irSensorDTO;
 
             case 7:
-                tracks.get(7).setState("present");
-                irSensorDTO = new IRSensorDTO(7, "present", sensor.getOrientation(), 0);
-                queue.add(irSensorDTO);
+                if (sensor.getOrientation() == 1) { //senzorul de la intrarea pe modul
+                    if (tracks.get(7).getSensorCounter() == 0) {//trenul a intrat pe modul
+                        tracks.get(7).setState("present");
+                        tracks.get(7).setSensorCounter(1);
+                        irSensorDTO = new IRSensorDTO(7, "present", sensor.getOrientation(), 1);
+                        queue.add(irSensorDTO);
+                    } else { //trenul paraseste modulul
+                        tracks.get(7).setState("empty");
+                        tracks.get(7).setSensorCounter(0);
+                        irSensorDTO = new IRSensorDTO(7, "empty", sensor.getOrientation(), 0);
+                        queue.add(irSensorDTO);
+                    }
+                } else { //senzorul de dinainte de macaze
+                    if (tracks.get(7).getSensorCounter() == 0) { // trenul iese din statie si eliberam linia ocupata
+                        tracks.get(getCurrentTrackY()).setState("empty");
+                        tracks.get(getCurrentTrackY()).setSensorCounter(0);
+                        tracks.get(7).setSensorCounter(1);
+                        irSensorDTO = new IRSensorDTO(7, "present", sensor.getOrientation(), 1);
+                        queue.add(irSensorDTO);
+                    } else { //trenul intra in statie, nu trimitem decat o notificare si trimitem din interfata scaderea vitezei
+                        irSensorDTO = new IRSensorDTO(7, "present", sensor.getOrientation(), 0);
+                        queue.add(irSensorDTO);
+                    }
+                }
                 return irSensorDTO;
 
             case 1:
@@ -89,28 +131,48 @@ public class LayoutObserver {
             case 3:
             case 4:
                 if (sensor.getOrientation() == 0) {//s-a calcat senzorul x al liniei
-                    if (tracks.get(trackNumber).getSensorCounter() == 0) { // vine dinspre x
+                    if (tracks.get(trackNumber).getSensorCounter() == 0) { // trenul intra pe linie, vine dinspre x
                         tracks.get(trackNumber).setSensorCounter(1);
-                        tracks.get(trackNumber).setState("present");
-                        irSensorDTO = new IRSensorDTO(trackNumber, tracks.get(trackNumber).getState(), sensor.getOrientation(), 0);
+                        tracks.get(trackNumber).setState("present"); // ar trebui sa fie pus de semnal
+                        irSensorDTO = new IRSensorDTO(trackNumber, "present", 0, 1);
                     } else {//vine dinspre y, deci eliberam y deoarece trenul a garat
                         tracks.get(7).setState("empty");
-                        irSensorDTO = new IRSensorDTO(7, "empty", sensor.getOrientation(), 1);
+                        tracks.get(7).setSensorCounter(0);
+                        irSensorDTO = new IRSensorDTO(trackNumber, "present", 0, 0);
                     }
                 } else {// s-a calcat senzorul y al liniei
                     if (tracks.get(trackNumber).getSensorCounter() == 0) { // vine dinspre iesire
                         tracks.get(trackNumber).setSensorCounter(1);
                         tracks.get(trackNumber).setState("present");
-                        irSensorDTO = new IRSensorDTO(trackNumber, tracks.get(trackNumber).getState(), sensor.getOrientation(), 0);
+                        irSensorDTO = new IRSensorDTO(trackNumber, "present", 1, 1);
                     } else { //vine dinspre x, deci eliberam x deoarece trenul a garat
                         tracks.get(0).setState("empty");
-                        irSensorDTO = new IRSensorDTO(0, "empty", sensor.getOrientation(), 1);
+                        tracks.get(0).setSensorCounter(0);
+                        irSensorDTO = new IRSensorDTO(trackNumber, "present", 1, 0);
                     }
                 }
                 queue.add(irSensorDTO);
                 return irSensorDTO;
         }
         return irSensorDTO;
+    }
+
+    private int getCurrentTrackX() {
+        if (turnouts.get(0).getDirection() == 1) {
+            return 2;
+        } else {
+            if (turnouts.get(2).getDirection() == 1) return 4;
+            else return 3;
+        }
+    }
+
+    private int getCurrentTrackY() {
+        if (turnouts.get(1).getDirection() == 1) {
+            return 4;
+        } else {
+            if (turnouts.get(3).getDirection() == 1) return 2;
+            else return 3;
+        }
     }
 
     public void updateLayout(TrackDTO trackDTO) {
@@ -141,6 +203,11 @@ public class LayoutObserver {
 
     public int checkCommandValidity(Signal signal) {
 
+        StringBuilder stringKey = new StringBuilder();
+        stringKey.append("signal").append(signal.getNumber());
+        if (signal.getType() == 0) stringKey.append("_x");
+        else stringKey.append("_y");
+
         switch (signal.getNumber()) {
             case 0: //linia de intrare
                 if (signal.getColor().equals("green") || signal.getColor().equals("yellow")) {
@@ -151,43 +218,21 @@ public class LayoutObserver {
                             || signals.get("signal4_y").getColor().equals("green")) {
                         return 0; //unul din semnalele de iesire este pe verde
                     }
-                    // succes la punerea semnalului pe verde
-//                    if (turnouts.get(0).getDirection() == 1) tracks.get(2).setState("present");
-//                    else if (turnouts.get(2).getDirection() == 0) tracks.get(3).setState("present");
-//                    else tracks.get(4).setState("present");
-                    StringBuilder stringKey = new StringBuilder();
-                    stringKey.append("signal").append(signal.getNumber());
-                    if(signal.getType() == 0) stringKey.append("_x");
-                    else stringKey.append("_y");
-                    signals.get(stringKey.toString()).setColor(signal.getColor());
-                    return 1;
-                } else return 0;
-
-            case 2:
-            case 3:
-            case 4:
-                if (signal.getColor().equals("green") || signal.getColor().equals("yellow")) {
-                    if (signal.getType() == 0) {
-                        if (mutualExclusionY == 1) return 0; //alt semnal x este pus pe liber
-                        if (tracks.get(7).getState().equals("present")) return 0; // linia 7 este ocupata
-                        if (signals.get("signal7_y").getColor().equals("green") || signals.get("signal7_y").getColor().equals("yellow"))
-                            return 0; //semnalul y este pe liber
-                    } else {
-                        if (mutualExclusionX == 1) return 0; //alt semnal x este pus pe liber
-                        if (tracks.get(0).getState().equals("present")) return 0; //linia 0 este ocupata
-                        if (signals.get("signal0_x").getColor().equals("green") || signals.get("signal0_x").getColor().equals("yellow"))
-                            return 0; //semnalul x este pe liber
-                    }
-
-                    // s-a reusit punerea semnalului pe liber
-                    StringBuilder stringKey = new StringBuilder();
-                    stringKey.append("signal").append(signal.getNumber());
-                    if(signal.getType() == 0) stringKey.append("_x");
-                    else stringKey.append("_y");
-                    signals.get(stringKey.toString()).setColor(signal.getColor());
+                    if (tracks.get(0).getState().equals("empty"))
+                        return 0; //nu putem pune semnalul daca linia nu este ocupata
+                    //succes la punerea semanlului pe liber
+                    signals.get("signal0_x").setColor(signal.getColor());
+                    tracks.get(getCurrentTrackX()).setState("present");
                     return 1;
                 }
-                break;
+                if (signal.getColor().equals("red")) {
+                    if (tracks.get(signal.getNumber()).getState().equals("present"))
+                        return 0; //daca exista un tren pe linie nu se mai poate pune pe rosu
+                    signals.get("signal0_x").setColor("red");
+                    tracks.get(getCurrentTrackX()).setState("empty");
+                    return 1;
+                }
+                return 0;
 
             case 7: //linia de iesire
                 if (signal.getColor().equals("green") || signal.getColor().equals("yellow")) {
@@ -198,15 +243,54 @@ public class LayoutObserver {
                             || signals.get("signal4_x").getColor().equals("green")) {
                         return 0; //unul din semnalele de iesire este pe verde
                     }
+                    if (tracks.get(7).getState().equals("empty"))
+                        return 0; //nu putem pune semnalul daca linia nu este ocupata
+                    //succes la punerea semanlului pe liber
+                    signals.get("signal7_y").setColor(signal.getColor());
+                    tracks.get(getCurrentTrackY()).setState("present");
+                    return 1;
+                }
+                if (signal.getColor().equals("red")) {
+                    if (tracks.get(signal.getNumber()).getState().equals("present"))
+                        return 0; //daca exista un tren pe linie nu se mai poate pune pe rosu
+                    signals.get("signal7_y").setColor("red");
+                    tracks.get(getCurrentTrackY()).setState("empty");
+                    return 1;
+                }
+                return 0;
 
-                    // s-a reusit punerea semnalului pe liber
-                    StringBuilder stringKey = new StringBuilder();
-                    stringKey.append("signal").append(signal.getNumber());
-                    if(signal.getType() == 0) stringKey.append("_x");
-                    else stringKey.append("_y");
+            case 2:
+            case 3:
+            case 4:
+                if (signal.getColor().equals("green") || signal.getColor().equals("yellow")) {
+                    if (signal.getType() == 0) { //semnal x ce duce spre y
+                        if (mutualExclusionY == 1) return 0; //alt semnal x este pus pe liber
+                        if (tracks.get(7).getState().equals("present")) return 0; // linia 7/iesirea este ocupata
+                        if (signals.get("signal7_y").getColor().equals("green") || signals.get("signal7_y").getColor().equals("yellow"))
+                            return 0; //semnalul y este pe liber
+                        //succes la punerea semanlului pe liber
+                        tracks.get(7).setState("present");
+                    } else {
+                        if (mutualExclusionX == 1) return 0; //alt semnal x este pus pe liber
+                        if (tracks.get(0).getState().equals("present")) return 0; //linia 0 este ocupata
+                        if (signals.get("signal0_x").getColor().equals("green") || signals.get("signal0_x").getColor().equals("yellow"))
+                            return 0; //semnalul x este pe liber
+                        //succes la punerea semanlului pe liber
+                        tracks.get(0).setState("present");
+                    }
                     signals.get(stringKey.toString()).setColor(signal.getColor());
                     return 1;
-                } else return 0;
+                }
+                if (signal.getColor().equals("red")) {
+                    if (signal.getType() == 0) {
+                        tracks.get(7).setState("empty");
+                    } else {
+                        tracks.get(0).setState("empty");
+                    }
+                    signals.get(stringKey.toString()).setColor("red");
+                    return 1;
+                }
+                return 0;
         }
         return 0;
     }
