@@ -15,10 +15,10 @@
     <script src="resources/js/sensorPolling.js"></script>
     <script src="resources/js/responsive.js"></script>
     <script src="resources/js/jquery.liblink.js"></script>
-    <script src="resources/js/reloadLayout.js"></script>
     <script src="resources/js/signals.js"></script>
     <script src="resources/js/turnouts.js"></script>
     <script src="resources/js/routing.js"></script>
+    <script src="resources/js/reloadLayout.js"></script>
 </head>
 
 <body>

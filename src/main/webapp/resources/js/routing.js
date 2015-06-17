@@ -62,21 +62,42 @@ function setRouteForLeavingTrain(signal) {
 function cancelRouteForLeavingTrain(signal) {
     switch (signal.number) {
         case 2:
-            setTurnoutsForLeavingTrain(2, signal.type);
-            if (signal.type == 0) uncolorizeTrack(7, 1);
-            else uncolorizeTrack(0, 0);
+            if (signal.type == 0) {
+                uncolorizeTrack(7, 1);
+                secureOccupiedTrack(2, 1);
+                enableAvailableTurnouts(1);
+            }
+            else {
+                secureOccupiedTrack(2, 0);
+                uncolorizeTrack(0, 0);
+                enableAvailableTurnouts(0);
+            }
             break;
 
         case 3:
-            setTurnoutsForLeavingTrain(3, signal.type);
-            if (signal.type == 0) uncolorizeTrack(7, 1);
-            else uncolorizeTrack(0, 0);
+            if (signal.type == 0) {
+                uncolorizeTrack(7, 1);
+                secureOccupiedTrack(3, 1);
+                enableAvailableTurnouts(1);
+            }
+            else {
+                secureOccupiedTrack(3, 0);
+                uncolorizeTrack(0, 0);
+                enableAvailableTurnouts(0);
+            }
             break;
 
         case 4:
-            setTurnoutsForLeavingTrain(4, signal.type);
-            if (signal.type == 0) uncolorizeTrack(7, 1);
-            else uncolorizeTrack(0, 0);
+            if (signal.type == 0) {
+                uncolorizeTrack(7, 1);
+                secureOccupiedTrack(4, 1);
+                enableAvailableTurnouts(1);
+            }
+            else {
+                secureOccupiedTrack(4, 0);
+                uncolorizeTrack(0, 0);
+                enableAvailableTurnouts(0);
+            }
             break;
     }
 }
@@ -256,10 +277,44 @@ function blockRouteForPassingTrain(firstTurnout) {
     }
 }
 
-function secureOccupiedTrack(trackNumber, direction) {
+function secureTrackForParking(trackNumber, direction){
     switch (trackNumber) {
         case 2:
+            if (direction == 0) {
+                $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
+                $('#turnout5_toggle').attr({disabled: 'disabled', blocked: true});
+            } else {
+                $('#turnout4_toggle').attr({disabled: 'disabled', blocked: true});
+            }
+            break;
+
+        case 3:
             if (direction == 0) {//trenul vine dinspre y, blocam x-ul
+                $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
+                $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
+                $('#turnout5_toggle').attr({disabled: 'disabled', blocked: true});
+            } else { //trenul vine dinspre x, blocam y-ul
+                $('#turnout4_toggle').attr({disabled: 'disabled', blocked: true});
+            }
+            break;
+
+        case 4:
+            if (direction == 0) {//trenul vine dinspre y, blocam x-ul
+                $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
+                $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
+                $('#turnout5_toggle').attr({disabled: 'disabled', blocked: true});
+            } else { //trenul vine dinspre x, blocam y-ul
+                $('#turnout2_toggle').attr({disabled: 'disabled', blocked: true});
+                $('#turnout6_toggle').attr({disabled: 'disabled', blocked: true});
+            }
+            break;
+    }
+}
+
+function secureOccupiedTrack(trackNumber, directionToBlock) {
+    switch (trackNumber) {
+        case 2:
+            if (directionToBlock == 0) {//trenul vine dinspre y, blocam x-ul
                 changeTurnout(1, 0);
                 changeTurnout(5, 0);
                 $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
@@ -272,7 +327,7 @@ function secureOccupiedTrack(trackNumber, direction) {
             break;
 
         case 3:
-            if (direction == 0) {//trenul vine dinspre y, blocam x-ul
+            if (directionToBlock == 0) {//trenul vine dinspre y, blocam x-ul
                 changeTurnout(3, 1);
                 $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
             } else { //trenul vine dinspre x, blocam y-ul
@@ -282,7 +337,7 @@ function secureOccupiedTrack(trackNumber, direction) {
             break;
 
         case 4:
-            if (direction == 0) {//trenul vine dinspre y, blocam x-ul
+            if (directionToBlock == 0) {//trenul vine dinspre y, blocam x-ul
                 changeTurnout(3, 0);
                 $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
             } else { //trenul vine dinspre x, blocam y-ul
@@ -342,6 +397,7 @@ function unblockRouteAfterTrainParked(lineNumber) {
             $('#signal0_x li[color="yellow"] span').removeClass('fg-yellow').addClass('fg-grayLight');
             $('#signal0_x li[color="red"] span').removeClass('fg-grayLight').addClass('fg-red');
             secureOccupiedTrack(getCurrentSetTrackX(), 0);
+            enableAvailableTurnouts(0);
             break;
 
         case 7:
@@ -350,7 +406,7 @@ function unblockRouteAfterTrainParked(lineNumber) {
             $('#signal7_y li[color="yellow"] span').removeClass('fg-yellow').addClass('fg-grayLight');
             $('#signal7_y li[color="red"] span').removeClass('fg-grayLight').addClass('fg-red');
             secureOccupiedTrack(getCurrentSetTrackY(), 1);
+            enableAvailableTurnouts(1);
             break;
     }
-    enableAvailableTurnouts();
 }

@@ -134,20 +134,20 @@ public class LayoutObserver {
                     if (tracks.get(trackNumber).getSensorCounter() == 0) { // trenul intra pe linie, vine dinspre x
                         tracks.get(trackNumber).setSensorCounter(1);
                         tracks.get(trackNumber).setState("present"); // ar trebui sa fie pus de semnal
+                        tracks.get(0).setState("empty"); //eliberam intrarea
+                        tracks.get(0).setSensorCounter(0);
                         irSensorDTO = new IRSensorDTO(trackNumber, "present", 0, 1);
-                    } else {//vine dinspre y, deci eliberam y deoarece trenul a garat
-                        tracks.get(7).setState("empty");
-                        tracks.get(7).setSensorCounter(0);
+                    } else {//vine dinspre y
                         irSensorDTO = new IRSensorDTO(trackNumber, "present", 0, 0);
                     }
                 } else {// s-a calcat senzorul y al liniei
                     if (tracks.get(trackNumber).getSensorCounter() == 0) { // vine dinspre iesire
                         tracks.get(trackNumber).setSensorCounter(1);
                         tracks.get(trackNumber).setState("present");
+                        tracks.get(7).setState("empty"); //eliberam y-ul
+                        tracks.get(7).setSensorCounter(0);
                         irSensorDTO = new IRSensorDTO(trackNumber, "present", 1, 1);
-                    } else { //vine dinspre x, deci eliberam x deoarece trenul a garat
-                        tracks.get(0).setState("empty");
-                        tracks.get(0).setSensorCounter(0);
+                    } else { //vine dinspre x
                         irSensorDTO = new IRSensorDTO(trackNumber, "present", 1, 0);
                     }
                 }
@@ -268,6 +268,8 @@ public class LayoutObserver {
                         if (tracks.get(7).getState().equals("present")) return 0; // linia 7/iesirea este ocupata
                         if (signals.get("signal7_y").getColor().equals("green") || signals.get("signal7_y").getColor().equals("yellow"))
                             return 0; //semnalul y este pe liber
+                        if(tracks.get(signal.getNumber()).getState().equals("empty") && tracks.get(0).getState().equals("empty")) return 0;
+                        if(tracks.get(signal.getNumber()).getState().equals("empty") && getCurrentTrackX()!= signal.getNumber()) return 0;
                         //succes la punerea semanlului pe liber
                         tracks.get(7).setState("present");
                     } else {
@@ -275,6 +277,8 @@ public class LayoutObserver {
                         if (tracks.get(0).getState().equals("present")) return 0; //linia 0 este ocupata
                         if (signals.get("signal0_x").getColor().equals("green") || signals.get("signal0_x").getColor().equals("yellow"))
                             return 0; //semnalul x este pe liber
+                        if(tracks.get(signal.getNumber()).getState().equals("empty") && tracks.get(7).getState().equals("empty")) return 0;
+                        if(tracks.get(signal.getNumber()).getState().equals("empty") && getCurrentTrackX()!= signal.getNumber()) return 0;
                         //succes la punerea semanlului pe liber
                         tracks.get(0).setState("present");
                     }
