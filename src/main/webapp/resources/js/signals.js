@@ -169,6 +169,7 @@ function processSensor(sensor) {
                     signal.color = 'red';
                     setSignalColor(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // <--
+                    $('#right_turnout_2').attr('src', right_turnout_src);
                     //vine dinspre y, trenul a ajuns la senzorul dinainte de semnal
                     //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
 
@@ -217,6 +218,7 @@ function processSensor(sensor) {
                     //vine dinspre y
                     //trenul a ajuns la senzorul dinainte de semnal
                     //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
+                    $('#track_3_y_between').attr('src', track_src);
                     if(getSignalColor(7, 'y') == 'red'){
                         console.log('semnal pe rosu');
                         //pune viteza pe 0
@@ -234,9 +236,11 @@ function processSensor(sensor) {
                     signal.color = 'red';//se elibereaza semnalul de intrare
                     setSignalColor(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) {
+                    $('#track_3_x_between').attr('src', track_src);
                     //vine dinspre x
                     //trenul a ajuns la senzorul dinainte de semnal
                     //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
+
                     //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                     //se elibereaza x-ul
                     make_route_x = false;
@@ -257,6 +261,7 @@ function processSensor(sensor) {
                     signal.color = 'red';
                     setSignalColor(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // <--
+                    $('#left_turnout_4').attr('src', left_turnout_src);
                     //vine dinspre y
                     //trenul a ajuns la senzorul dinainte de semnal
                     //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
@@ -274,6 +279,7 @@ function processSensor(sensor) {
                     signal.color = 'red';//se elibereaza semnalul de intrare
                     setSignalColor(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) {
+                    $('#right_turnout_4').attr('src', right_turnout_src);
                     //vine dinspre x
                     //trenul a ajuns la senzorul dinainte de semnal
                     //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
