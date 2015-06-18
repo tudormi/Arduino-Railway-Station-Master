@@ -65,7 +65,7 @@ function initializeSignals(signalNumber, signalType) {
     });
 }
 
-function changeSignal(signal) {
+function changeSignal(signal, processFlag) {
     setSignalColor(signal);
     $.ajax({
         url: '/command/signal',
@@ -74,7 +74,7 @@ function changeSignal(signal) {
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(signal),
         success: function (data) {
-            if (data == 1) {
+            if (data == 1 && processFlag == true) {
                 processSignal(signal);
             } else if (data == 0) {
                 alert('Nu se poate pune semnalul');
@@ -83,19 +83,58 @@ function changeSignal(signal) {
     });
 }
 
+function checkIfLineIsOccupied(trackNumber) {
+    switch (trackNumber) {
+        case 3:
+            if ($('#track_3_centre').attr('src') == track_src_present) return true;
+            else return false;
+        case 4:
+            if ($('#track_4').attr('src') == track_src_present) return true;
+            else return false;
+        case 2:
+            if ($('#track_2').attr('src') == track_src_present) return true;
+            else return false;
+    }
+}
+
+function markLineAsOccupied(trackNumber) {
+    switch (trackNumber) {
+        case 0:
+            $('#track_3_x').attr('src', track_src_present);
+            break;
+        case 2:
+            $('#track_2').attr('src', track_src_present);
+            break;
+        case 3:
+            $('#track_3_centre').attr('src', track_src_present);
+            break;
+        case 4:
+            $('#track_4').attr('src', track_src_present);
+            break;
+        case 7:
+            $('#track_3_y').attr('src', track_src_present);
+            break;
+    }
+}
+
 function processSensor(sensor) {
 
     switch (sensor['track']) {
         case 0:
             if (sensor['orientation'] == 0) { //senzorul de la intrarea pe modul
                 if (sensor['counter'] == 1 && sensor['state'] == 'present') { //trenul a intrat pe modul -->
-                    $('#track_3_x').attr('src', track_src_present);
-                    make_route_x = true;
-                    colorizeTrackAsRouteForEnteringTrain(1);
+                    markLineAsOccupied(0);
+                    if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
+                        console.log('toata liniile sunt ocupate, nu se poate face parcursul');
+                    } else {
+                        make_route_x = true;
+                        colorizeTrackAsRouteForEnteringTrain(1);
+                    }
                 } else if (sensor['counter'] == 0 && sensor['state'] == 'empty') { //trenul paraseste modulul <--
-                    uncolorizeTrack(0, 0);
                     make_route_x = false;
-                    unblockRouteAfterTrainParked(0);
+                    uncolorizeTrack(0, 0);
+                    unblockSwitchesForFreeTracks();
+                    enableAvailableTurnouts(0);
                 }
             } else { //senzorul de dinainte de macaze
                 if (sensor['counter'] == 1 && sensor['state'] == 'present') {// trenul iese din statie si eliberam linia ocupata <--
@@ -103,10 +142,19 @@ function processSensor(sensor) {
                     signal.color = 'red';
                     signal.type = 1;
                     signal.number = getCurrentSetTrackX();
-                    changeSignal(signal);
-                    $('#track_3_x').attr('src', track_src_present);
+                    changeSignal(signal, false);
+                    markLineAsOccupied(0);
                     uncolorizeTrack(getCurrentSetTrackX(), 0);
+                    unblockSwitchesForFreeTracks();
                 } else if (sensor['counter'] == 0 && sensor['state'] == 'present') { //trenul intra in statie, este aproape de semnalul de intrare -->
+
+                    if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
+                        console.log('toata liniile sunt ocupate, nu se poate face parcursul');
+                    } else {
+                        make_route_x = true;
+                        colorizeTrackAsRouteForEnteringTrain(1);
+                    }
+
                     if (getSignalColor(0, 'x') == 'red') {
                         console.log('semnal pe rosu');
                         //pune viteza pe 0
@@ -125,23 +173,26 @@ function processSensor(sensor) {
         case 7:
             if (sensor['orientation'] == 1) { //senzorul de la intrarea pe modul
                 if (sensor['counter'] == 1 && sensor['state'] == 'present') { //trenul a intrat pe modul <--
-                    $('#track_3_y').attr('src', track_src_present);
+                    markLineAsOccupied(7);
                     make_route_y = true;
                     colorizeTrackAsRouteForEnteringTrain(2);
                 } else if (sensor['counter'] == 0 && sensor['state'] == 'empty') { //trenul paraseste modulul -->
                     uncolorizeTrack(7, 1);
                     make_route_y = false;
-                    unblockRouteAfterTrainParked(7);
+                    unblockSwitchesForFreeTracks();
+                    enableAvailableTurnouts(1);
                 }
             } else { //senzorul de dinainte de macaze
                 if (sensor['counter'] == 1 && sensor['state'] == 'present') { /// trenul iese din statie si eliberam linia ocupata -->
                     //decoloram linie de pe care tocmai a plecat
+                    uncolorizeTrack(getCurrentSetTrackY(), 1);
                     signal.color = 'red';
                     signal.type = 0;
                     signal.number = getCurrentSetTrackY();
-                    changeSignal(signal);
-                    $('#track_3_y').attr('src', track_src_present);
-                    uncolorizeTrack(getCurrentSetTrackY(), 1);
+                    changeSignal(signal, false);
+                    unblockSwitchesForFreeTracks();
+                    markLineAsOccupied(7);
+
                 } else if (sensor['counter'] == 0 && sensor['state'] == 'present') { //trenul intra in statie, este aprope de semnalul de intrare <--
                     if (getSignalColor(7, 'y') == 'red') {
                         console.log('semnal pe rosu');
@@ -167,7 +218,7 @@ function processSensor(sensor) {
                     signal.number = 0;
                     signal.type = 0;
                     signal.color = 'red';
-                    setSignalColor(signal); //se elibereaza semnalul de intrare
+                    changeSignal(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // <--
                     $('#right_turnout_2').attr('src', right_turnout_src);
                     //vine dinspre y, trenul a ajuns la senzorul dinainte de semnal
@@ -185,13 +236,13 @@ function processSensor(sensor) {
                     $('#track_3_y_between').attr('src', track_src);
                     signal.number = 7;
                     signal.type = 1;
-                    signal.color = 'red';//se elibereaza semnalul de intrare
-                    setSignalColor(signal); //se elibereaza semnalul de intrare
+                    signal.color = 'red';
+                    changeSignal(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) {
                     $('#left_turnout_2').attr('src', left_turnout_src);
                     //vine dinspre x, trenul a ajuns la senzorul dinainte de semnal
                     //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
-                    if(getSignalColor(2, 'x') == 'red'){
+                    if (getSignalColor(2, 'x') == 'red') {
                         console.log('semnal pe rosu');
                         //pune viteza pe 0
                     } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
@@ -213,13 +264,13 @@ function processSensor(sensor) {
                     signal.number = 0;
                     signal.type = 0;
                     signal.color = 'red';
-                    setSignalColor(signal); //se elibereaza semnalul de intrare
+                    changeSignal(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // <--
                     //vine dinspre y
                     //trenul a ajuns la senzorul dinainte de semnal
                     //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                     $('#track_3_y_between').attr('src', track_src);
-                    if(getSignalColor(7, 'y') == 'red'){
+                    if (getSignalColor(7, 'y') == 'red') {
                         console.log('semnal pe rosu');
                         //pune viteza pe 0
                     }
@@ -234,7 +285,7 @@ function processSensor(sensor) {
                     signal.number = 7;
                     signal.type = 1;
                     signal.color = 'red';//se elibereaza semnalul de intrare
-                    setSignalColor(signal); //se elibereaza semnalul de intrare
+                    changeSignal(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) {
                     $('#track_3_x_between').attr('src', track_src);
                     //vine dinspre x
@@ -259,7 +310,7 @@ function processSensor(sensor) {
                     signal.number = 0;
                     signal.type = 0;
                     signal.color = 'red';
-                    setSignalColor(signal); //se elibereaza semnalul de intrare
+                    changeSignal(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // <--
                     $('#left_turnout_4').attr('src', left_turnout_src);
                     //vine dinspre y
@@ -277,7 +328,7 @@ function processSensor(sensor) {
                     signal.number = 7;
                     signal.type = 1;
                     signal.color = 'red';//se elibereaza semnalul de intrare
-                    setSignalColor(signal); //se elibereaza semnalul de intrare
+                    changeSignal(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) {
                     $('#right_turnout_4').attr('src', right_turnout_src);
                     //vine dinspre x
@@ -300,7 +351,13 @@ function processSignal(signal) {
             setSignalColor(signal);
             blockRouteForPassingTrain(1);
             secureOccupiedTrack(getCurrentSetTrackX(), 1);
-            secureTrackForParking(getCurrentSetTrackX(), 0);
+            if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
+                console.log('toata liniile sunt ocupate, nu se poate face parcursul');
+            } else {
+                make_route_x = true;
+                colorizeTrackAsRouteForEnteringTrain(1);
+            }
+            //secureTrackForParking(getCurrentSetTrackX(), 0);
             break;
 
         case 2:
@@ -323,7 +380,13 @@ function processSignal(signal) {
             setSignalColor(signal);
             blockRouteForPassingTrain(2);
             secureOccupiedTrack(getCurrentSetTrackY(), 0);
-            secureTrackForParking(getCurrentSetTrackY(), 1);
+            if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
+                console.log('toata liniile sunt ocupate, nu se poate face parcursul');
+            } else {
+                make_route_y = true;
+                colorizeTrackAsRouteForEnteringTrain(7);
+            }
+            //secureTrackForParking(getCurrentSetTrackY(), 1);
             break;
     }
 
@@ -341,7 +404,7 @@ function setSignalColor(signal) {
     $(signalId).attr('state', signal.color);
 }
 
-function setSignalColorManual(number, type, color){
+function setSignalColorManual(number, type, color) {
     var signalId = '#signal' + number + '_' + type;
     $(signalId + ' li[color="red"] span').removeClass('fg-red').addClass('fg-grayLight');
     $(signalId + ' li[color="' + color + '"] span').removeClass('fg-grayLight').addClass('fg-' + color);

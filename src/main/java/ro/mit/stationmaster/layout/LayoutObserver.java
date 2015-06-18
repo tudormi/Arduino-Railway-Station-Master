@@ -133,7 +133,7 @@ public class LayoutObserver {
                 if (sensor.getOrientation() == 0) {//s-a calcat senzorul x al liniei
                     if (tracks.get(trackNumber).getSensorCounter() == 0) { // trenul intra pe linie, vine dinspre x
                         tracks.get(trackNumber).setSensorCounter(1);
-                        tracks.get(trackNumber).setState("present"); // ar trebui sa fie pus de semnal
+//                        tracks.get(trackNumber).setState("present"); // ar trebui sa fie pus de semnal
                         tracks.get(0).setState("empty"); //eliberam intrarea
                         tracks.get(0).setSensorCounter(0);
                         irSensorDTO = new IRSensorDTO(trackNumber, "present", 0, 1);
@@ -229,7 +229,6 @@ public class LayoutObserver {
                     if (tracks.get(signal.getNumber()).getState().equals("present"))
                         return 0; //daca exista un tren pe linie nu se mai poate pune pe rosu
                     signals.get("signal0_x").setColor("red");
-                    tracks.get(getCurrentTrackX()).setState("empty");
                     return 1;
                 }
                 return 0;
@@ -254,7 +253,6 @@ public class LayoutObserver {
                     if (tracks.get(signal.getNumber()).getState().equals("present"))
                         return 0; //daca exista un tren pe linie nu se mai poate pune pe rosu
                     signals.get("signal7_y").setColor("red");
-                    tracks.get(getCurrentTrackY()).setState("empty");
                     return 1;
                 }
                 return 0;
@@ -286,9 +284,9 @@ public class LayoutObserver {
                     return 1;
                 }
                 if (signal.getColor().equals("red")) {
-                    if (signal.getType() == 0) {
+                    if (signal.getType() == 0 && tracks.get(getCurrentTrackY()).getState().equals("present")) {
                         tracks.get(7).setState("empty");
-                    } else {
+                    } else if(signal.getType() == 1 && tracks.get(getCurrentTrackX()).getState().equals("present")){
                         tracks.get(0).setState("empty");
                     }
                     signals.get(stringKey.toString()).setColor("red");

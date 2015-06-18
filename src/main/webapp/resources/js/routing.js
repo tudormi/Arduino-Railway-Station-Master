@@ -112,10 +112,11 @@ function colorizeTrackAsRouteForEnteringTrain(turnoutNumber) {
         case 1:
         case 3:
         case 5:
-            if (!($('#track_2').attr('src') != track_src_present && make_route_y == true && lineNumberY == 2))uncolorizeTrack(2, 0);
+            //if (!($('#track_2').attr('src') != track_src_present && make_route_y == true && lineNumberY == 2))uncolorizeTrack(2, 0);
+            if ($('#track_2').attr('src') != track_src_present && (make_route_y == false || lineNumberY != 2)) uncolorizeTrack(2, 0);
             else $('#left_turnout_2').attr('src', left_turnout_src);
-            if (!($('#track_3_centre').attr('src') != track_src_present && make_route_y == true && lineNumberY == 3)) uncolorizeTrack(3, 0);
-            if (!($('#track_4').attr('src') != track_src_present && make_route_y == true && lineNumberY == 4)) uncolorizeTrack(4, 0);
+            if ($('#track_3_centre').attr('src') != track_src_present && (make_route_y == false || lineNumberY != 3)) uncolorizeTrack(3, 0);
+            if ($('#track_4').attr('src') != track_src_present && (make_route_y == false || lineNumberY != 4)) uncolorizeTrack(4, 0);
             else $('#right_turnout_4').attr('src', right_turnout_src);
             colorizeTrackAsRoute(lineNumberX, 0);
             break;
@@ -123,10 +124,10 @@ function colorizeTrackAsRouteForEnteringTrain(turnoutNumber) {
         case 2:
         case 4:
         case 6:
-            if (!($('#track_2').attr('src') != track_src_present && make_route_x == true && lineNumberX == 2)) uncolorizeTrack(2, 1);
+            if ($('#track_2').attr('src') != track_src_present && (make_route_x == false || lineNumberX != 2)) uncolorizeTrack(2, 1);
             else $('#right_turnout_2').attr('src', right_turnout_src);
-            if (!($('#track_3_centre').attr('src') != track_src_present && make_route_x == true && lineNumberX == 3)) uncolorizeTrack(3, 1);
-            if (!($('#track_4').attr('src') != track_src_present && make_route_x == true && lineNumberX == 4)) uncolorizeTrack(4, 1);
+            if ($('#track_3_centre').attr('src') != track_src_present && (make_route_x == false || lineNumberX != 3)) uncolorizeTrack(3, 1);
+            if ($('#track_4').attr('src') != track_src_present && (make_route_x == false || lineNumberX != 4)) uncolorizeTrack(4, 1);
             else $('#left_turnout_4').attr('src', left_turnout_src);
             colorizeTrackAsRoute(lineNumberY, 1);
             break;
@@ -277,7 +278,7 @@ function blockRouteForPassingTrain(firstTurnout) {
     }
 }
 
-function secureTrackForParking(trackNumber, direction){
+function secureTrackForParking(trackNumber, direction) {
     switch (trackNumber) {
         case 2:
             if (direction == 0) {
@@ -338,8 +339,14 @@ function secureOccupiedTrack(trackNumber, directionToBlock) {
 
         case 4:
             if (directionToBlock == 0) {//trenul vine dinspre y, blocam x-ul
-                changeTurnout(3, 0);
-                $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
+                if ($('#track_3_centre').attr('src', track_src_present)) {
+                    changeTurnout(1, 1);
+                    $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
+                }
+                else {
+                    changeTurnout(3, 0);
+                    $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
+                }
             } else { //trenul vine dinspre x, blocam y-ul
                 changeTurnout(2, 0);
                 changeTurnout(6, 0);
@@ -350,23 +357,83 @@ function secureOccupiedTrack(trackNumber, directionToBlock) {
     }
 }
 
-function unsecureOccupiedTrack(trackNumber, direction) {
+function unblockSwitchesForFreeTracks() {
+
+    if (!checkIfLineIsOccupied(2) && !checkIfLineIsOccupied(3) && !checkIfLineIsOccupied(4)) {
+        $('#turnout1_toggle').attr('blocked', 'false').removeAttr('disabled');
+        $('#turnout2_toggle').attr('blocked', 'false').removeAttr('disabled');
+        $('#turnout3_toggle').attr('blocked', 'false').removeAttr('disabled');
+        $('#turnout4_toggle').attr('blocked', 'false').removeAttr('disabled');
+        $('#turnout5_toggle').attr('blocked', 'false').removeAttr('disabled');
+        $('#turnout6_toggle').attr('blocked', 'false').removeAttr('disabled');
+    } else if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
+        $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
+        $('#turnout2_toggle').attr({disabled: 'disabled', blocked: true});
+        $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
+        $('#turnout4_toggle').attr({disabled: 'disabled', blocked: true});
+        $('#turnout5_toggle').attr({disabled: 'disabled', blocked: true});
+        $('#turnout6_toggle').attr({disabled: 'disabled', blocked: true});
+    } else {
+        $('#turnout1_toggle').attr('blocked', 'false').removeAttr('disabled');
+        $('#turnout2_toggle').attr('blocked', 'false').removeAttr('disabled');
+        $('#turnout3_toggle').attr('blocked', 'false').removeAttr('disabled');
+        $('#turnout4_toggle').attr('blocked', 'false').removeAttr('disabled');
+        $('#turnout5_toggle').attr('blocked', 'false').removeAttr('disabled');
+        $('#turnout6_toggle').attr('blocked', 'false').removeAttr('disabled');
+
+        if (checkIfLineIsOccupied(2)) {
+            $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
+            $('#turnout5_toggle').attr({disabled: 'disabled', blocked: true});
+            $('#turnout4_toggle').attr({disabled: 'disabled', blocked: true});
+            changeTurnout(1, 0);
+            changeTurnout(5, 0);
+            changeTurnout(4, 0);
+        }
+        if (checkIfLineIsOccupied(4)) {
+            $('#turnout2_toggle').attr({disabled: 'disabled', blocked: true});
+            $('#turnout6_toggle').attr({disabled: 'disabled', blocked: true});
+            $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
+            changeTurnout(2, 0);
+            changeTurnout(6, 0);
+            changeTurnout(3, 0);
+        }
+        if (checkIfLineIsOccupied(3)) {
+            $('#turnout3_toggle').attr({disabled: 'disabled', blocked: true});
+            $('#turnout4_toggle').attr({disabled: 'disabled', blocked: true});
+            changeTurnout(3, 1);
+            changeTurnout(4, 1);
+        }
+
+        if (checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
+            $('#turnout1_toggle').attr({disabled: 'disabled', blocked: true});
+            changeTurnout(1, 1);
+        }
+
+        if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3)) {
+            $('#turnout2_toggle').attr({disabled: 'disabled', blocked: true});
+            changeTurnout(2, 1);
+        }
+    }
+
+
     switch (trackNumber) {
         case 2:
-            if (direction == 0) {//trenul vine dinspre y, blocam x-ul
-                changeTurnout(1, 0);
-                changeTurnout(5, 0);
-                $('#turnout1_toggle').attr('blocked', 'false').removeAttr('disabled');
-                $('#turnout5_toggle').attr('blocked', 'false').removeAttr('disabled');
-            }
-            else { //trenul vine dinspre x, blocam y-ul
-                changeTurnout(4, 0);
-                $('#turnout4_toggle').attr('blocked', 'false').removeAttr('disabled');
+            if (checkIfLineIsOccupied(3) == false || checkIfLineIsOccupied(4) == false) { //daca celalte 2 linii sunt ocupate macazele nu trebuie schimbate
+                if (turnoutsOrientation == 0) {//trenul vine dinspre y, blocam x-ul
+                    changeTurnout(1, 0);
+                    changeTurnout(5, 0);
+                    $('#turnout1_toggle').attr('blocked', 'false').removeAttr('disabled');
+                    $('#turnout5_toggle').attr('blocked', 'false').removeAttr('disabled');
+                }
+                else { //trenul vine dinspre x, blocam y-ul
+                    changeTurnout(4, 0);
+                    $('#turnout4_toggle').attr('blocked', 'false').removeAttr('disabled');
+                }
             }
             break;
 
         case 3:
-            if (direction == 0) {//trenul vine dinspre y, blocam x-ul
+            if (turnoutsOrientation == 0) {//trenul vine dinspre y, blocam x-ul
                 changeTurnout(3, 1);
                 $('#turnout3_toggle').attr('blocked', 'false').removeAttr('disabled');
             } else { //trenul vine dinspre x, blocam y-ul
@@ -376,7 +443,7 @@ function unsecureOccupiedTrack(trackNumber, direction) {
             break;
 
         case 4:
-            if (direction == 0) {//trenul vine dinspre y, blocam x-ul
+            if (turnoutsOrientation == 0) {//trenul vine dinspre y, blocam x-ul
                 changeTurnout(3, 0);
                 $('#turnout3_toggle').attr('blocked', 'false').removeAttr('disabled');
             } else { //trenul vine dinspre x, blocam y-ul
@@ -392,19 +459,11 @@ function unsecureOccupiedTrack(trackNumber, direction) {
 function unblockRouteAfterTrainParked(lineNumber) {
     switch (lineNumber) {
         case 0:
-            /* eliberam semnalul */
-            $('#signal0_x li[color="green"] span').removeClass('fg-green').addClass('fg-grayLight');
-            $('#signal0_x li[color="yellow"] span').removeClass('fg-yellow').addClass('fg-grayLight');
-            $('#signal0_x li[color="red"] span').removeClass('fg-grayLight').addClass('fg-red');
             secureOccupiedTrack(getCurrentSetTrackX(), 0);
             enableAvailableTurnouts(0);
             break;
 
         case 7:
-            /* eliberam semnalul */
-            $('#signal7_y li[color="green"] span').removeClass('fg-green').addClass('fg-grayLight');
-            $('#signal7_y li[color="yellow"] span').removeClass('fg-yellow').addClass('fg-grayLight');
-            $('#signal7_y li[color="red"] span').removeClass('fg-grayLight').addClass('fg-red');
             secureOccupiedTrack(getCurrentSetTrackY(), 1);
             enableAvailableTurnouts(1);
             break;

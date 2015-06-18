@@ -19,8 +19,9 @@ $(document).ready(function () {
         var number = Number($(this).attr('turnoutNumber'));
         var direction = Number($(this).val());
         /* 0 - directa, 1 - abatuta */
-        sendServerNotificationForRoutingColor(number, direction);
         synchronizeTurnouts(number, direction);
+        sendServerNotificationForRoutingColor(number, direction);
+
     });
 
 });
