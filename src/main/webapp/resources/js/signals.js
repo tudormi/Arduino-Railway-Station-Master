@@ -162,6 +162,7 @@ function processSensor(sensor) {
                     if (getSignalColor(0, 'x') == 'red') {
                         console.log('semnal pe rosu');
                         speedOperation.sendValue(0, 0);
+                        $('#track0_speed_control').val(0);
                         $('#track0_speed_control').attr('disabled', 'disabled');
                     } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                         if ($('#turnout1_toggle').val() == 1) {
@@ -228,6 +229,7 @@ function processSensor(sensor) {
                     if (getSignalColor(2, 'y') == 'red') { //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                         console.log('semnal pe rosu');
                         speedOperation.sendValue(0, 2);
+                        $('#track2_speed_control').val(0);
                         $('#track2_speed_control').attr('disabled', 'disabled');
                     } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                         $('#left_turnout_2').attr('src', left_turnout_src_present);
@@ -249,6 +251,7 @@ function processSensor(sensor) {
                     if (getSignalColor(2, 'x') == 'red') { //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                         console.log('semnal pe rosu');
                         speedOperation.sendValue(0, 2);
+                        $('#track2_speed_control').val(0);
                         $('#track2_speed_control').attr('disabled', 'disabled');
                     } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                         $('#right_turnout_2').attr('src', right_turnout_src_present);
@@ -274,6 +277,7 @@ function processSensor(sensor) {
                     if (getSignalColor(3, 'y') == 'red') {  //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                         console.log('semnal pe rosu');
                         speedOperation.sendValue(0, 3);
+                        $('#track3_speed_control').val(0);
                         $('#track3_speed_control').attr('disabled', 'disabled');
                     } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                         $('#track_3_x_between').attr('src', track_src_present);
@@ -292,6 +296,7 @@ function processSensor(sensor) {
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // --> vine dinspre x, trenul a ajuns la senzorul dinainte de semnal
                     if (getSignalColor(3, 'x') == 'red') { //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                         console.log('semnal pe rosu');
+                        $('#track3_speed_control').val();
                         speedOperation.sendValue(0, 3);
                         $('#track3_speed_control').attr('disabled', 'disabled');
                     } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
@@ -319,6 +324,7 @@ function processSensor(sensor) {
                     if (getSignalColor(4, 'y') == 'red') {  //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                         console.log('semnal pe rosu');
                         speedOperation.sendValue(0, 4);
+                        $('#track4_speed_control').val(0);
                         $('#track4_speed_control').attr('disabled', 'disabled');
                     } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                         $('#track_3_x_between').attr('src', track_src_present);
@@ -341,6 +347,7 @@ function processSensor(sensor) {
                     if (getSignalColor(4, 'x') == 'red') { //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                         console.log('semnal pe rosu');
                         speedOperation.sendValue(0, 4);
+                        $('#track4_speed_control').val(0);
                         $('#track4_speed_control').attr('disabled', 'disabled');
                     } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                         $('#track_3_y_between').attr('src', track_src_present);

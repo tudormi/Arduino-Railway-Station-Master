@@ -13,6 +13,7 @@ import ro.mit.stationmaster.layout.LayoutObserver;
 
 /* o singura pagina cu multe call-uri ajax? da */
 @Controller
+@RequestMapping("/")
 public class HomePageController {
 
     @Autowired
