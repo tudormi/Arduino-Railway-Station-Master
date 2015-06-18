@@ -32,28 +32,21 @@ $(document).ready(function() {
     /* turnouts */
     $('#turnout1_toggle').val(localStorage.getItem('turnout1_toggle'));
     if(localStorage.getItem('turnout1_toggle_status') == 'disabled') $('#turnout1_toggle').attr('disabled', 'disabled');
-    $('#turnout1_toggle').attr('blocked', localStorage.getItem('turnout1_toggle_blocking'));
 
     $('#turnout2_toggle').val(localStorage.getItem('turnout2_toggle'));
     if(localStorage.getItem('turnout2_toggle_status') == 'disabled') $('#turnout2_toggle').attr('disabled', 'disabled');
-    $('#turnout2_toggle').attr('blocked', localStorage.getItem('turnout2_toggle_blocking'));
 
     $('#turnout3_toggle').val(localStorage.getItem('turnout3_toggle'));
     if(localStorage.getItem('turnout3_toggle_status') == 'disabled') $('#turnout3_toggle').attr('disabled', 'disabled');
-    $('#turnout3_toggle').attr('blocked', localStorage.getItem('turnout3_toggle_blocking'));
 
     $('#turnout4_toggle').val(localStorage.getItem('turnout4_toggle'));
     if(localStorage.getItem('turnout4_toggle_status') == 'disabled') $('#turnout4_toggle').attr('disabled', 'disabled');
-    $('#turnout4_toggle').attr('blocked', localStorage.getItem('turnout4_toggle_blocking'));
 
     $('#turnout5_toggle').val(localStorage.getItem('turnout5_toggle'));
     if(localStorage.getItem('turnout5_toggle_status') == 'disabled') $('#turnout5_toggle').attr('disabled', 'disabled');
-    $('#turnout5_toggle').attr('blocked', localStorage.getItem('turnout5_toggle_blocking'));
 
     $('#turnout6_toggle').val(localStorage.getItem('turnout6_toggle'));
     if(localStorage.getItem('turnout6_toggle_status') == 'disabled') $('#turnout6_toggle').attr('disabled', 'disabled');
-    $('#turnout6_toggle').attr('blocked', localStorage.getItem('turnout6_toggle_blocking'));
-
     /* tracks */
     $('#track_2').attr('src', localStorage.getItem('track_2'));
     $('#track_3_x').attr('src', localStorage.getItem('track_3_x'));
@@ -98,27 +91,21 @@ $(window).on('beforeunload', function(){
     /* turnouts */
     localStorage.setItem('turnout1_toggle', $('#turnout1_toggle').val());
     localStorage.setItem('turnout1_toggle_status', getTurnoutState(1));
-    localStorage.setItem('turnout1_toggle_blocking', $('#turnout1_toggle').attr('blocked'));
 
     localStorage.setItem('turnout2_toggle', $('#turnout2_toggle').val());
     localStorage.setItem('turnout2_toggle_status', getTurnoutState(2));
-    localStorage.setItem('turnout2_toggle_blocking', $('#turnout2_toggle').attr('blocked'));
 
     localStorage.setItem('turnout3_toggle', $('#turnout3_toggle').val());
     localStorage.setItem('turnout3_toggle_status', getTurnoutState(3));
-    localStorage.setItem('turnout3_toggle_blocking', $('#turnout3_toggle').attr('blocked'));
 
     localStorage.setItem('turnout4_toggle', $('#turnout4_toggle').val());
     localStorage.setItem('turnout4_toggle_status', getTurnoutState(4));
-    localStorage.setItem('turnout4_toggle_blocking', $('#turnout4_toggle').attr('blocked'));
 
     localStorage.setItem('turnout5_toggle', $('#turnout5_toggle').val());
     localStorage.setItem('turnout5_toggle_status', getTurnoutState(5));
-    localStorage.setItem('turnout5_toggle_blocking', $('#turnout5_toggle').attr('blocked'));
 
     localStorage.setItem('turnout6_toggle', $('#turnout6_toggle').val());
     localStorage.setItem('turnout6_toggle_status', getTurnoutState(6));
-    localStorage.setItem('turnout6_toggle_blocking', $('#turnout6_toggle').attr('blocked'));
 
     /* tracks */
     localStorage.setItem('track_2', $('#track_2').attr('src'));

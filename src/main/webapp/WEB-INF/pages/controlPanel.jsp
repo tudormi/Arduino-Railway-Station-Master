@@ -51,15 +51,15 @@
         </div>
         <div class="spatiu">
             <div class="turnout_toggle_wrapper">
-                <div id="turnout1_toggle" class="turnout_toggle" turnoutNumber="1" blocked="false"></div>
+                <div id="turnout1_toggle" class="turnout_toggle" turnoutNumber="1"></div>
             </div>
             <div class="turnout_toggle_wrapper">
-                <div id="turnout5_toggle" class="turnout_toggle" turnoutNumber="5" blocked="false"></div>
+                <div id="turnout5_toggle" class="turnout_toggle" turnoutNumber="5"></div>
             </div>
             <img class="turnout" id="left_turnout_2" src="resources/images/left_switch_empty.png">
 
             <div class="turnout_toggle_wrapper">
-                <div id="turnout4_toggle" class="turnout_toggle" turnoutNumber="4" blocked="false"></div>
+                <div id="turnout4_toggle" class="turnout_toggle" turnoutNumber="4"></div>
             </div>
             <img class="turnout" id="right_turnout_2" src="resources/images/right_switch_empty.png">
         </div>
@@ -96,7 +96,7 @@
         </div>
         <div class="spatiu">
             <div class="turnout_toggle_wrapper">
-                <div id="turnout3_toggle" class="turnout_toggle" turnoutNumber="3" blocked="false"></div>
+                <div id="turnout3_toggle" class="turnout_toggle" turnoutNumber="3"></div>
             </div>
             <ul class="breadcrumbs2 mini signal" id="signal4_y" type="1" number="4" state="red">
                 <li><a href="#"><span class="mif-traff fg-black"></span></a></li>
@@ -112,10 +112,10 @@
                 <li color="green"><a href="#"><span class="mif-contrast fg-grayLight"></span></a></li>
             </ul>
             <div class="turnout_toggle_wrapper">
-                <div id="turnout6_toggle" class="turnout_toggle" turnoutNumber="6" blocked="false"></div>
+                <div id="turnout6_toggle" class="turnout_toggle" turnoutNumber="6"></div>
             </div>
             <div class="turnout_toggle_wrapper">
-                <div id="turnout2_toggle" class="turnout_toggle" turnoutNumber="2" blocked="false"></div>
+                <div id="turnout2_toggle" class="turnout_toggle" turnoutNumber="2"></div>
             </div>
             <img class="turnout" id="left_turnout_4" src="resources/images/left_switch_empty.png">
         </div>
@@ -126,30 +126,62 @@
     </div>
 
     <div class="track_control">
-        <h3 class="track_title">Track 1</h3>
-
+        <h3 class="track_title">Entrance</h3>
         <div class="track_direction_toggle_wrapper">
             <p> B</p>
-
-            <div id="track1_direction_toggle" class="track_toggle" trackNumber="1"></div>
+            <div id="track0_direction_toggle" class="track_toggle" trackNumber="0"></div>
             <p>F</p>
         </div>
         <div class="track_speed_control_wrapper">
-            <div id="track1_speed_control" class="speed_controller" trackNumber="1"></div>
+            <div id="track0_speed_control" class="speed_controller" trackNumber="0"></div>
         </div>
     </div>
 
     <div class="track_control">
         <h3 class="track_title">Track 2</h3>
-
         <div class="track_direction_toggle_wrapper">
-            <p>B</p>
-
+            <p> B</p>
             <div id="track2_direction_toggle" class="track_toggle" trackNumber="2"></div>
             <p>F</p>
         </div>
         <div class="track_speed_control_wrapper">
             <div id="track2_speed_control" class="speed_controller" trackNumber="2"></div>
+        </div>
+    </div>
+
+    <div class="track_control">
+        <h3 class="track_title">Track 3</h3>
+        <div class="track_direction_toggle_wrapper">
+            <p>B</p>
+            <div id="track3_direction_toggle" class="track_toggle" trackNumber="3"></div>
+            <p>F</p>
+        </div>
+        <div class="track_speed_control_wrapper">
+            <div id="track3_speed_control" class="speed_controller" trackNumber="3"></div>
+        </div>
+    </div>
+
+    <div class="track_control">
+        <h3 class="track_title">Track 4</h3>
+        <div class="track_direction_toggle_wrapper">
+            <p>B</p>
+            <div id="track4_direction_toggle" class="track_toggle" trackNumber="4"></div>
+            <p>F</p>
+        </div>
+        <div class="track_speed_control_wrapper">
+            <div id="track4_speed_control" class="speed_controller" trackNumber="4"></div>
+        </div>
+    </div>
+
+    <div class="track_control">
+        <h3 class="track_title">Exit</h3>
+        <div class="track_direction_toggle_wrapper">
+            <p> B</p>
+            <div id="track7_direction_toggle" class="track_toggle" trackNumber="7"></div>
+            <p>F</p>
+        </div>
+        <div class="track_speed_control_wrapper">
+            <div id="track7_speed_control" class="speed_controller" trackNumber="7"></div>
         </div>
     </div>
 

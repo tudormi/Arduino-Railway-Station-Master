@@ -1,11 +1,17 @@
 /**
  * Created by Tudormi on 19/5/2015.
  */
+
+var speedOperation = {};
+
 $(document).ready(function () {
 
     /* Speed slider initializations */
-    initializeTrackControllers(1);
+    initializeTrackControllers(0);
     initializeTrackControllers(2);
+    initializeTrackControllers(3);
+    initializeTrackControllers(4);
+    initializeTrackControllers(7);
 
     $('.tooltip').hide();
 
@@ -20,12 +26,12 @@ $(document).ready(function () {
         direction: "forward"
     };
 
-    var updateServerValue = function (trackNumber) {
+    speedOperation.updateServerValue = function (trackNumber) {
         if (timer === null) {
             timer = setInterval(function () {
                 var newValue = Math.round(Number($('#track' + trackNumber + '_speed_control').val()));
                 if (newValue !== lastSentValue) {
-                    sendValue(newValue, trackNumber);
+                    speedOperation.sendValue(newValue, trackNumber);
                 } else {
                     clearInterval(timer);
                     timer = null;
@@ -34,7 +40,7 @@ $(document).ready(function () {
         }
     };
 
-    var sendValue = function (newValue, trackNumber) {
+    speedOperation.sendValue = function (newValue, trackNumber) {
 
         track.speed = newValue;
         track.number = trackNumber;
@@ -47,12 +53,12 @@ $(document).ready(function () {
             data: JSON.stringify(track),
             success: function (data) {
                 console.dir(track);
-                updateLastSentValue(newValue, trackNumber);
+                speedOperation.updateLastSentValue(newValue, trackNumber);
             }
         });
     };
 
-    var updateLastSentValue = function (newValue, trackNumber) {
+    speedOperation.updateLastSentValue = function (newValue, trackNumber) {
         lastSentValue = newValue;
         if (newValue === 0) {
             $('#track' + trackNumber + '_direction_toggle').removeAttr('disabled');
@@ -65,25 +71,24 @@ $(document).ready(function () {
 
     $('.speed_controller').on('slide', function () {
         var trackNumber = Number($(this).attr('trackNumber'));
-        updateServerValue(trackNumber);
+        speedOperation.updateServerValue(trackNumber);
     });
 
     /* Stop the train(set speed to 0) when user changes the direction */
-
-    var reverseTrackDirection = function (trackNumber) {
-        sendValue(0, trackNumber);
+    speedOperation.reverseTrackDirection = function (trackNumber) {
+        speedOperation.sendValue(0, trackNumber);
         $('#track' + trackNumber + '_speed_control').val(0);
-    }
+    };
 
     $('.direction_toggler').on('slide', function (event) {
         /* forward = 1, backward = 0 */
         var trackNumber = Number($(this).attr('trackNumber'));
         if (Number($(this).val()) === 1) {
             track.direction = 'forward';
-            reverseTrackDirection(trackNumber);
+            speedOperation.reverseTrackDirection(trackNumber);
         } else {
             track.direction = 'backwards';
-            reverseTrackDirection(trackNumber);
+            speedOperation.reverseTrackDirection(trackNumber);
         }
     });
 });

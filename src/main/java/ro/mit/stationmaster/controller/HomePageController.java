@@ -21,9 +21,7 @@ public class HomePageController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String layoutOverview(ModelMap modelMap){
         modelMap.addAttribute("message", "StationMaster");
-        modelMap.addAttribute("speed", layoutObserver.getTrack(0).getSpeed());
-        modelMap.addAttribute("direction", layoutObserver.getTrack(0).getDirection());
-        return "hello";
+        return "controlPanel";
     }
 
 }

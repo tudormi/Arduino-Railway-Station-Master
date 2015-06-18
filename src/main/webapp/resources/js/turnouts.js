@@ -26,20 +26,6 @@ $(document).ready(function () {
 
 });
 
-function enableAvailableTurnouts(orientation) {
-    if(orientation == 0){
-        if ($('#turnout1_toggle').attr('blocked') == 'false') $('#turnout1_toggle').removeAttr('disabled');
-        if ($('#turnout3_toggle').attr('blocked') == 'false') $('#turnout3_toggle').removeAttr('disabled');
-        if ($('#turnout5_toggle').attr('blocked') == 'false') $('#turnout5_toggle').removeAttr('disabled');
-    }
-    else {
-        if ($('#turnout2_toggle').attr('blocked') == 'false') $('#turnout2_toggle').removeAttr('disabled');
-        if ($('#turnout4_toggle').attr('blocked') == 'false') $('#turnout4_toggle').removeAttr('disabled');
-        if ($('#turnout6_toggle').attr('blocked') == 'false') $('#turnout6_toggle').removeAttr('disabled');
-    }
-
-}
-
 function setTurnoutsForLeavingTrain(lineNumber, orientation) {
     switch (orientation) {
         case 0:

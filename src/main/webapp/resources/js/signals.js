@@ -117,6 +117,24 @@ function markLineAsOccupied(trackNumber) {
     }
 }
 
+function makeParcursX() {
+    if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
+        console.log('toata liniile sunt ocupate, nu se poate face parcursul');
+    } else {
+        make_route_x = true;
+        colorizeTrackAsRouteForEnteringTrain(1);
+    }
+}
+
+function makeParcursY() {
+    if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
+        console.log('toata liniile sunt ocupate, nu se poate face parcursul');
+    } else {
+        make_route_y = true;
+        colorizeTrackAsRouteForEnteringTrain(2);
+    }
+}
+
 function processSensor(sensor) {
 
     switch (sensor['track']) {
@@ -124,40 +142,27 @@ function processSensor(sensor) {
             if (sensor['orientation'] == 0) { //senzorul de la intrarea pe modul
                 if (sensor['counter'] == 1 && sensor['state'] == 'present') { //trenul a intrat pe modul -->
                     markLineAsOccupied(0);
-                    if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
-                        console.log('toata liniile sunt ocupate, nu se poate face parcursul');
-                    } else {
-                        make_route_x = true;
-                        colorizeTrackAsRouteForEnteringTrain(1);
-                    }
+                    makeParcursX()
                 } else if (sensor['counter'] == 0 && sensor['state'] == 'empty') { //trenul paraseste modulul <--
                     make_route_x = false;
                     uncolorizeTrack(0, 0);
-                    unblockSwitchesForFreeTracks();
-                    enableAvailableTurnouts(0);
+                    unblockTurnoutsForFreeTracks();
                 }
             } else { //senzorul de dinainte de macaze
                 if (sensor['counter'] == 1 && sensor['state'] == 'present') {// trenul iese din statie si eliberam linia ocupata <--
-                    //decoloram linia de pe care tocmai a plecat si coloram ca pentru prezenta intrarea
-                    signal.color = 'red';
+                    signal.color = 'red'; //decoloram linia de pe care tocmai a plecat si coloram ca pentru prezenta intrarea
                     signal.type = 1;
                     signal.number = getCurrentSetTrackX();
                     changeSignal(signal, false);
-                    markLineAsOccupied(0);
                     uncolorizeTrack(getCurrentSetTrackX(), 0);
-                    unblockSwitchesForFreeTracks();
+                    markLineAsOccupied(0);
+                    unblockTurnoutsForFreeTracks();
                 } else if (sensor['counter'] == 0 && sensor['state'] == 'present') { //trenul intra in statie, este aproape de semnalul de intrare -->
-
-                    if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
-                        console.log('toata liniile sunt ocupate, nu se poate face parcursul');
-                    } else {
-                        make_route_x = true;
-                        colorizeTrackAsRouteForEnteringTrain(1);
-                    }
-
+                    makeParcursX();
                     if (getSignalColor(0, 'x') == 'red') {
                         console.log('semnal pe rosu');
-                        //pune viteza pe 0
+                        speedOperation.sendValue(0, 0);
+                        $('#track0_speed_control').attr('disabled', 'disabled');
                     } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                         if ($('#turnout1_toggle').val() == 1) {
                             $('#left_turnout_2').attr('src', left_turnout_src_present);
@@ -174,29 +179,27 @@ function processSensor(sensor) {
             if (sensor['orientation'] == 1) { //senzorul de la intrarea pe modul
                 if (sensor['counter'] == 1 && sensor['state'] == 'present') { //trenul a intrat pe modul <--
                     markLineAsOccupied(7);
-                    make_route_y = true;
-                    colorizeTrackAsRouteForEnteringTrain(2);
+                    makeParcursY();
                 } else if (sensor['counter'] == 0 && sensor['state'] == 'empty') { //trenul paraseste modulul -->
-                    uncolorizeTrack(7, 1);
                     make_route_y = false;
-                    unblockSwitchesForFreeTracks();
-                    enableAvailableTurnouts(1);
+                    uncolorizeTrack(7, 1);
+                    unblockTurnoutsForFreeTracks();
                 }
             } else { //senzorul de dinainte de macaze
                 if (sensor['counter'] == 1 && sensor['state'] == 'present') { /// trenul iese din statie si eliberam linia ocupata -->
-                    //decoloram linie de pe care tocmai a plecat
-                    uncolorizeTrack(getCurrentSetTrackY(), 1);
-                    signal.color = 'red';
+                    signal.color = 'red'; //decoloram linie de pe care tocmai a plecat si coloram ca pentru prezenta intrarea
                     signal.type = 0;
                     signal.number = getCurrentSetTrackY();
                     changeSignal(signal, false);
-                    unblockSwitchesForFreeTracks();
+                    uncolorizeTrack(getCurrentSetTrackY(), 1);
                     markLineAsOccupied(7);
-
+                    unblockTurnoutsForFreeTracks();
                 } else if (sensor['counter'] == 0 && sensor['state'] == 'present') { //trenul intra in statie, este aprope de semnalul de intrare <--
+                    makeParcursY();
                     if (getSignalColor(7, 'y') == 'red') {
                         console.log('semnal pe rosu');
-                        //pune viteza pe 0
+                        speedOperation.sendValue(0, 7);
+                        $('#track7_speed_control').attr('disabled', 'disabled');
                     } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                         if ($('#turnout2_toggle').val() == 1) {
                             $('#left_turnout_4').attr('src', left_turnout_src_present);
@@ -219,38 +222,39 @@ function processSensor(sensor) {
                     signal.type = 0;
                     signal.color = 'red';
                     changeSignal(signal); //se elibereaza semnalul de intrare
-                } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // <--
+                } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // <-- vine dinspre y, trenul a ajuns la senzorul dinainte de semnal
                     $('#right_turnout_2').attr('src', right_turnout_src);
-                    //vine dinspre y, trenul a ajuns la senzorul dinainte de semnal
-                    //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
-
-                    //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
+                    $('#track_3_y_between').attr('src', track_src);
+                    if (getSignalColor(2, 'y') == 'red') { //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
+                        console.log('semnal pe rosu');
+                        speedOperation.sendValue(0, 2);
+                        $('#track2_speed_control').attr('disabled', 'disabled');
+                    } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
+                        $('#left_turnout_2').attr('src', left_turnout_src_present);
+                    }
                     make_route_y = false;
-                    unblockRouteAfterTrainParked(7);
+                    unblockTurnoutsForFreeTracks();
                 }
             } else { // s-a calcat senzorul y al liniei
                 if (sensor['state'] == 'present' && sensor['counter'] == 1) { // <--
                     $('#right_turnout_2').attr('src', right_turnout_src_present);
                     $('#track_2').attr('src', track_src_present);
                     $('#track_3_y').attr('src', track_src); //eliberam iesirea
-                    $('#track_3_y_between').attr('src', track_src);
                     signal.number = 7;
                     signal.type = 1;
                     signal.color = 'red';
                     changeSignal(signal); //se elibereaza semnalul de intrare
-                } else if (sensor['state'] == 'present' && sensor['counter'] == 0) {
+                } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // --> vine dinspre x, trenul a ajuns la senzorul dinainte de semnal
                     $('#left_turnout_2').attr('src', left_turnout_src);
-                    //vine dinspre x, trenul a ajuns la senzorul dinainte de semnal
-                    //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
-                    if (getSignalColor(2, 'x') == 'red') {
+                    if (getSignalColor(2, 'x') == 'red') { //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                         console.log('semnal pe rosu');
-                        //pune viteza pe 0
+                        speedOperation.sendValue(0, 2);
+                        $('#track2_speed_control').attr('disabled', 'disabled');
                     } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                         $('#right_turnout_2').attr('src', right_turnout_src_present);
                     }
-                    //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                     make_route_x = false;
-                    unblockRouteAfterTrainParked(0);
+                    unblockTurnoutsForFreeTracks();
                 }
             }
             break;
@@ -265,18 +269,17 @@ function processSensor(sensor) {
                     signal.type = 0;
                     signal.color = 'red';
                     changeSignal(signal); //se elibereaza semnalul de intrare
-                } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // <--
-                    //vine dinspre y
-                    //trenul a ajuns la senzorul dinainte de semnal
-                    //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
+                } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // <-- vine dinspre y, trenul a ajuns la senzorul dinainte de semnal
                     $('#track_3_y_between').attr('src', track_src);
-                    if (getSignalColor(7, 'y') == 'red') {
+                    if (getSignalColor(3, 'y') == 'red') {  //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
                         console.log('semnal pe rosu');
-                        //pune viteza pe 0
+                        speedOperation.sendValue(0, 3);
+                        $('#track3_speed_control').attr('disabled', 'disabled');
+                    } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
+                        $('#track_3_x_between').attr('src', track_src_present);
                     }
-                    //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
                     make_route_y = false;
-                    unblockRouteAfterTrainParked(7);
+                    unblockTurnoutsForFreeTracks();
                 }
             } else { // s-a calcat senzorul y al liniei
                 if (sensor['state'] == 'present' && sensor['counter'] == 1) { // <--
@@ -284,18 +287,18 @@ function processSensor(sensor) {
                     $('#track_3_y').attr('src', track_src); // eliberam intrarea
                     signal.number = 7;
                     signal.type = 1;
-                    signal.color = 'red';//se elibereaza semnalul de intrare
+                    signal.color = 'red';
                     changeSignal(signal); //se elibereaza semnalul de intrare
-                } else if (sensor['state'] == 'present' && sensor['counter'] == 0) {
-                    $('#track_3_x_between').attr('src', track_src);
-                    //vine dinspre x
-                    //trenul a ajuns la senzorul dinainte de semnal
-                    //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
-
-                    //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
-                    //se elibereaza x-ul
+                } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // --> vine dinspre x, trenul a ajuns la senzorul dinainte de semnal
+                    if (getSignalColor(3, 'x') == 'red') { //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
+                        console.log('semnal pe rosu');
+                        speedOperation.sendValue(0, 3);
+                        $('#track3_speed_control').attr('disabled', 'disabled');
+                    } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
+                        $('#track_3_y_between').attr('src', track_src_present);
+                    }
                     make_route_x = false;
-                    unblockRouteAfterTrainParked(0);
+                    unblockTurnoutsForFreeTracks();
                 }
             }
             break;
@@ -313,12 +316,15 @@ function processSensor(sensor) {
                     changeSignal(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // <--
                     $('#left_turnout_4').attr('src', left_turnout_src);
-                    //vine dinspre y
-                    //trenul a ajuns la senzorul dinainte de semnal
-                    //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
-                    //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
+                    if (getSignalColor(4, 'y') == 'red') {  //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
+                        console.log('semnal pe rosu');
+                        speedOperation.sendValue(0, 4);
+                        $('#track4_speed_control').attr('disabled', 'disabled');
+                    } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
+                        $('#track_3_x_between').attr('src', track_src_present);
+                    }
                     make_route_y = false;
-                    unblockRouteAfterTrainParked(7);
+                    unblockTurnoutsForFreeTracks();
                 }
             } else { // s-a calcat senzorul y al liniei
                 if (sensor['state'] == 'present' && sensor['counter'] == 1) { // <--
@@ -331,13 +337,16 @@ function processSensor(sensor) {
                     changeSignal(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) {
                     $('#right_turnout_4').attr('src', right_turnout_src);
-                    //vine dinspre x
-                    //trenul a ajuns la senzorul dinainte de semnal
-                    //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
-                    //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
-                    //se elibereaza x-ul
+                    $('#track_3_x_between').attr('src', track_src);
+                    if (getSignalColor(4, 'x') == 'red') { //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
+                        console.log('semnal pe rosu');
+                        speedOperation.sendValue(0, 4);
+                        $('#track4_speed_control').attr('disabled', 'disabled');
+                    } else { //daca nu e rosu, se coloreaza macazul/sau linia between in rosu ca pentru prezenta
+                        $('#track_3_y_between').attr('src', track_src_present);
+                    }
                     make_route_x = false;
-                    unblockRouteAfterTrainParked(0);
+                    unblockTurnoutsForFreeTracks();
                 }
             }
             break;
@@ -350,14 +359,8 @@ function processSignal(signal) {
         case 0: //semnal de intrare x
             setSignalColor(signal);
             blockRouteForPassingTrain(1);
-            secureOccupiedTrack(getCurrentSetTrackX(), 1);
-            if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
-                console.log('toata liniile sunt ocupate, nu se poate face parcursul');
-            } else {
-                make_route_x = true;
-                colorizeTrackAsRouteForEnteringTrain(1);
-            }
-            //secureTrackForParking(getCurrentSetTrackX(), 0);
+            secureTrackForParkingTrain(getCurrentSetTrackX(), 1);
+            makeParcursX();
             break;
 
         case 2:
@@ -379,14 +382,8 @@ function processSignal(signal) {
         case 7: //semnal de intrare y
             setSignalColor(signal);
             blockRouteForPassingTrain(2);
-            secureOccupiedTrack(getCurrentSetTrackY(), 0);
-            if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
-                console.log('toata liniile sunt ocupate, nu se poate face parcursul');
-            } else {
-                make_route_y = true;
-                colorizeTrackAsRouteForEnteringTrain(7);
-            }
-            //secureTrackForParking(getCurrentSetTrackY(), 1);
+            secureTrackForParkingTrain(getCurrentSetTrackY(), 0);
+            makeParcursY();
             break;
     }
 
