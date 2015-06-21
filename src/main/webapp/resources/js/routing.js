@@ -2,10 +2,7 @@
  * Created by tmatrescu on 16/6/2015.
  */
 
-function sendServerNotificationForRoutingColor(number, direction) {
-    turnout.number = number;
-    turnout.direction = direction;
-
+function sendServerNotificationForRoutingColorAndSynchronizing(turnout) {
     $.ajax({
         url: '/command/turnout',
         type: 'post',
@@ -13,12 +10,65 @@ function sendServerNotificationForRoutingColor(number, direction) {
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(turnout),
         success: function (data) {
+            synchronizeTurnouts(number, direction);
             if ((make_route_x == true && (turnout.number == 1 || turnout.number == 3 || turnout.number == 5)) ||
                 (make_route_y == true && (turnout.number == 2 || turnout.number == 4 || turnout.number == 6))) {
-                colorizeTrackAsRouteForEnteringTrain(turnout.number, turnout.direction);
+                colorizeTrackAsRouteForDetectedTrain(turnout.number, turnout.direction);
             }
         }
     });
+}
+
+function makeParcursX() {
+    if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
+        console.log('toata liniile sunt ocupate, nu se poate face parcursul');
+    } else {
+        make_route_x = true;
+        colorizeTrackAsRouteForDetectedTrain(1);
+    }
+}
+
+function makeParcursY() {
+    if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
+        console.log('toata liniile sunt ocupate, nu se poate face parcursul');
+    } else {
+        make_route_y = true;
+        colorizeTrackAsRouteForDetectedTrain(2);
+    }
+}
+
+function markLineAsOccupied(trackNumber) {
+    switch (trackNumber) {
+        case 0:
+            $('#track_3_x').attr('src', track_src_present);
+            break;
+        case 2:
+            $('#track_2').attr('src', track_src_present);
+            break;
+        case 3:
+            $('#track_3_centre').attr('src', track_src_present);
+            break;
+        case 4:
+            $('#track_4').attr('src', track_src_present);
+            break;
+        case 7:
+            $('#track_3_y').attr('src', track_src_present);
+            break;
+    }
+}
+
+function checkIfLineIsOccupied(trackNumber) {
+    switch (trackNumber) {
+        case 3:
+            if ($('#track_3_centre').attr('src') == track_src_present) return true;
+            else return false;
+        case 4:
+            if ($('#track_4').attr('src') == track_src_present) return true;
+            else return false;
+        case 2:
+            if ($('#track_2').attr('src') == track_src_present) return true;
+            else return false;
+    }
 }
 
 function getCurrentSetTrackX() {
@@ -106,7 +156,7 @@ function cancelRouteForLeavingTrain(signal) {
     }
 }
 
-function colorizeTrackAsRouteForEnteringTrain(turnoutNumber) {
+function colorizeTrackAsRouteForDetectedTrain(turnoutNumber) {
 
     var lineNumberX = getCurrentSetTrackX();
     var lineNumberY = getCurrentSetTrackY();
