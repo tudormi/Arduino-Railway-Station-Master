@@ -16,12 +16,10 @@ $(document).ready(function () {
     initializeTurnoutControllers(6);
 
     $('.turnout_toggle').on('slide', function () {
-        var number = Number($(this).attr('turnoutNumber'));
-        var direction = Number($(this).val());
+        turnout.number = Number($(this).attr('turnoutNumber'));
+        turnout.direction = Number($(this).val());
         /* 0 - directa, 1 - abatuta */
-        synchronizeTurnouts(number, direction);
-        sendServerNotificationForRoutingColor(number, direction);
-
+        sendServerNotificationForRoutingColorAndSynchronizing(number, direction);
     });
 
 });

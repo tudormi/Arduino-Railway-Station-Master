@@ -66,7 +66,6 @@ function initializeSignals(signalNumber, signalType) {
 }
 
 function changeSignal(signal, processFlag) {
-    setSignalColor(signal);
     $.ajax({
         url: '/command/signal',
         type: 'post',
@@ -74,6 +73,7 @@ function changeSignal(signal, processFlag) {
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(signal),
         success: function (data) {
+            setSignalColor(signal);
             if (data == 1 && processFlag == true) {
                 processSignal(signal);
             } else if (data == 0) {
@@ -81,58 +81,6 @@ function changeSignal(signal, processFlag) {
             }
         }
     });
-}
-
-function checkIfLineIsOccupied(trackNumber) {
-    switch (trackNumber) {
-        case 3:
-            if ($('#track_3_centre').attr('src') == track_src_present) return true;
-            else return false;
-        case 4:
-            if ($('#track_4').attr('src') == track_src_present) return true;
-            else return false;
-        case 2:
-            if ($('#track_2').attr('src') == track_src_present) return true;
-            else return false;
-    }
-}
-
-function markLineAsOccupied(trackNumber) {
-    switch (trackNumber) {
-        case 0:
-            $('#track_3_x').attr('src', track_src_present);
-            break;
-        case 2:
-            $('#track_2').attr('src', track_src_present);
-            break;
-        case 3:
-            $('#track_3_centre').attr('src', track_src_present);
-            break;
-        case 4:
-            $('#track_4').attr('src', track_src_present);
-            break;
-        case 7:
-            $('#track_3_y').attr('src', track_src_present);
-            break;
-    }
-}
-
-function makeParcursX() {
-    if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
-        console.log('toata liniile sunt ocupate, nu se poate face parcursul');
-    } else {
-        make_route_x = true;
-        colorizeTrackAsRouteForEnteringTrain(1);
-    }
-}
-
-function makeParcursY() {
-    if (checkIfLineIsOccupied(2) && checkIfLineIsOccupied(3) && checkIfLineIsOccupied(4)) {
-        console.log('toata liniile sunt ocupate, nu se poate face parcursul');
-    } else {
-        make_route_y = true;
-        colorizeTrackAsRouteForEnteringTrain(2);
-    }
 }
 
 function processSensor(sensor) {
@@ -361,7 +309,6 @@ function processSensor(sensor) {
 }
 
 function processSignal(signal) {
-
     switch (signal.number) {
         case 0: //semnal de intrare x
             setSignalColor(signal);
