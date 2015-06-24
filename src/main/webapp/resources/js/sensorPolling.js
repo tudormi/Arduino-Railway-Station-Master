@@ -23,6 +23,7 @@ function getSensorUpdate() {
     console.log('new update request');
     if (request) {
         request.abort();
+        console.log('request aborted');
     }
 
     var request = $.ajax({

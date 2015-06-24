@@ -66,7 +66,6 @@ function initializeSignals(signalNumber, signalType) {
 }
 
 function changeSignal(signal, processFlag) {
-    setSignalColor(signal);
     $.ajax({
         url: '/command/signal',
         type: 'post',
@@ -74,6 +73,7 @@ function changeSignal(signal, processFlag) {
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(signal),
         success: function (data) {
+            setSignalColor(signal);
             if (data == 1 && processFlag == true) {
                 processSignal(signal);
             } else if (data == 0) {

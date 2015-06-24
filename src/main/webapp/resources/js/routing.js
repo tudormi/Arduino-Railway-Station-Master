@@ -2,10 +2,7 @@
  * Created by tmatrescu on 16/6/2015.
  */
 
-function sendServerNotificationForRoutingColor(number, direction) {
-    turnout.number = number;
-    turnout.direction = direction;
-
+function sendServerNotificationForRoutingColor(turnout) {
     $.ajax({
         url: '/command/turnout',
         type: 'post',
@@ -13,6 +10,7 @@ function sendServerNotificationForRoutingColor(number, direction) {
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(turnout),
         success: function (data) {
+            synchronizeTurnouts(turnout);
             if ((make_route_x == true && (turnout.number == 1 || turnout.number == 3 || turnout.number == 5)) ||
                 (make_route_y == true && (turnout.number == 2 || turnout.number == 4 || turnout.number == 6))) {
                 colorizeTrackAsRouteForEnteringTrain(turnout.number, turnout.direction);

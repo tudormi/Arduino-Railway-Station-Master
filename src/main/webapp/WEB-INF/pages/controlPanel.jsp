@@ -28,10 +28,10 @@
 
     <div id="station_scheme">
         <div id="track_1">
-            <img class="track" src="resources/images/track_empty.png">
+            <img class="track" src="resources/images/track_empty_white.png">
         </div>
         <div class="spatiu">
-            <img class="turnout" id="left_turnout_1" src="resources/images/left_switch_empty.png">
+            <img class="turnout" id="left_turnout_1" src="resources/images/left_switch_empty_white.png">
         </div>
         <div id="track_25">
             <ul class="breadcrumbs2 mini" id="signal2_y" type="1" number="2" state="red">

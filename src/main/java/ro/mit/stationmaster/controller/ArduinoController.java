@@ -35,7 +35,7 @@ public class ArduinoController {
     @Autowired
     LayoutObserver layoutObserver;
 
-    @RequestMapping(value = "/line", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/track", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public int sendLineCommand(@RequestBody TrackDTO trackDTO) {
 //        return layoutObserver.checkCommandValidity(trackDTO);
