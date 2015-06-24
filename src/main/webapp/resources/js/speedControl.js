@@ -46,12 +46,13 @@ $(document).ready(function () {
         track.number = trackNumber;
 
         $.ajax({
-            url: '/command/track',
+            url: '/command/line',
             type: 'post',
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(track),
             success: function (data) {
+                console.dir(track);
                 speedOperation.updateLastSentValue(newValue, trackNumber);
             }
         });

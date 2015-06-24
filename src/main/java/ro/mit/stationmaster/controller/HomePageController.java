@@ -21,7 +21,7 @@ public class HomePageController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String layoutOverview(ModelMap modelMap){
-        modelMap.addAttribute("message", "Railway Station Master");
+        modelMap.addAttribute("message", "StationMaster");
         return "controlPanel";
     }
 
