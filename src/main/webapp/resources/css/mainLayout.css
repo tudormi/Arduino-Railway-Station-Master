@@ -197,21 +197,21 @@
 
 #track_3_x{
     position: absolute;
-    width: 15%;
+    width: 15.2%;
     display: block;
 }
 
 #track_3_x_between{
     position: absolute;
-    width: 4%;
+    width: 3.6%;
     display: block;
-    left: 15%;
+    left: 15.2%;
 }
 
 #track_3_centre{
     position: absolute;
-    left: 19%;
-    width:62%;
+    left: 18.8%;
+    width:62.2%;
     display: block;
 }
 
@@ -257,7 +257,8 @@
 
 #track_4{
     left:25%;
-    width: 54%;
+    width: 53.6%;
+    z-index: 10;
 }
 
 #track_6{

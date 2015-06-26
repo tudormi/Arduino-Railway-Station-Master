@@ -284,9 +284,9 @@ public class LayoutObserver {
                     return 1;
                 }
                 if (signal.getColor().equals("red")) {
-                    if (signal.getType() == 0 && tracks.get(getCurrentTrackY()).getState().equals("present")) {
+                    if (signal.getType() == 0) {
                         tracks.get(7).setState("empty");
-                    } else if(signal.getType() == 1 && tracks.get(getCurrentTrackX()).getState().equals("present")){
+                    } else if(signal.getType() == 1){
                         tracks.get(0).setState("empty");
                     }
                     signals.get(stringKey.toString()).setColor("red");
