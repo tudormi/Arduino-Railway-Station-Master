@@ -5,6 +5,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import ro.mit.stationmaster.dto.IRSensorDTO;
 import ro.mit.stationmaster.dto.TrackDTO;
+import ro.mit.stationmaster.trackElements.IRSensor;
+import ro.mit.stationmaster.trackElements.Signal;
+import ro.mit.stationmaster.trackElements.Track;
+import ro.mit.stationmaster.trackElements.Turnout;
+import ro.mit.stationmaster.utils.SerialComm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +27,9 @@ public class LayoutObserver {
 
     @Autowired
     ArduinoMessageDispatcher arduinoMessageDispatcher;
+
+    @Autowired
+    SerialComm serialComm;
 
     private ArrayList<Track> tracks;
     private ArrayList<Turnout> turnouts;
@@ -58,14 +66,6 @@ public class LayoutObserver {
         localStorageClearFlag = 0;
         mutualExclusionX = 0;
         mutualExclusionY = 0;
-    }
-
-    public int getLocalStorageClearFlag() {
-        return localStorageClearFlag;
-    }
-
-    public void setLocalStorageClearFlag(int localStorageClearFlag) {
-        this.localStorageClearFlag = localStorageClearFlag;
     }
 
     public IRSensorDTO updateLayoutFromArduino(IRSensor sensor) {
@@ -157,24 +157,6 @@ public class LayoutObserver {
         return irSensorDTO;
     }
 
-    private int getCurrentTrackX() {
-        if (turnouts.get(0).getDirection() == 1) {
-            return 2;
-        } else {
-            if (turnouts.get(2).getDirection() == 1) return 4;
-            else return 3;
-        }
-    }
-
-    private int getCurrentTrackY() {
-        if (turnouts.get(1).getDirection() == 1) {
-            return 4;
-        } else {
-            if (turnouts.get(3).getDirection() == 1) return 2;
-            else return 3;
-        }
-    }
-
     public void updateLayout(TrackDTO trackDTO) {
         int lineNumber = trackDTO.getNumber();
         logger.info("Linia: " + lineNumber + " , viteza: " + trackDTO.getSpeed());
@@ -184,20 +166,16 @@ public class LayoutObserver {
 
     public void updateLayout(Turnout turnout) {
         turnouts.get(turnout.getNumber() - 1).setDirection(turnout.getDirection());
+        arduinoMessageDispatcher.sendTurnoutMessage(turnout);
     }
 
     public int checkCommandValidity(TrackDTO trackDTO) {
         if (trackDTO.getSpeed() > 254) {
             return 0;
         } else {
-            int lineNumber = trackDTO.getNumber();
-            if (tracks.get(lineNumber).getSpeed() > trackDTO.getSpeed() && (tracks.get(lineNumber).getSpeed() - trackDTO.getSpeed()) > 10) {
-                //ar trebui sa trimita mesaj mai rar cu o crestere treptata a vitezei
-            }
             arduinoMessageDispatcher.sendTrackMessage(trackDTO);
         }
         updateLayout(trackDTO);
-
         return 1;
     }
 
@@ -266,8 +244,10 @@ public class LayoutObserver {
                         if (tracks.get(7).getState().equals("present")) return 0; // linia 7/iesirea este ocupata
                         if (signals.get("signal7_y").getColor().equals("green") || signals.get("signal7_y").getColor().equals("yellow"))
                             return 0; //semnalul y este pe liber
-                        if(tracks.get(signal.getNumber()).getState().equals("empty") && tracks.get(0).getState().equals("empty")) return 0;
-                        if(tracks.get(signal.getNumber()).getState().equals("empty") && getCurrentTrackX()!= signal.getNumber()) return 0;
+                        if (signals.get("signal0_x").getColor().equals("red") && tracks.get(signal.getNumber()).getState().equals("empty"))
+                            return 0; //nu punem semnalul de iesire pe liber pana nu il punem pe cel de intrare
+                        if (signals.get("signal0_x").getColor().equals("green") && getCurrentTrackX() != signal.getNumber())
+                            return 0;
                         //succes la punerea semanlului pe liber
                         tracks.get(7).setState("present");
                     } else {
@@ -275,8 +255,10 @@ public class LayoutObserver {
                         if (tracks.get(0).getState().equals("present")) return 0; //linia 0 este ocupata
                         if (signals.get("signal0_x").getColor().equals("green") || signals.get("signal0_x").getColor().equals("yellow"))
                             return 0; //semnalul x este pe liber
-                        if(tracks.get(signal.getNumber()).getState().equals("empty") && tracks.get(7).getState().equals("empty")) return 0;
-                        if(tracks.get(signal.getNumber()).getState().equals("empty") && getCurrentTrackX()!= signal.getNumber()) return 0;
+                        if (signals.get("signal7_y").getColor().equals("red") && tracks.get(signal.getNumber()).getState().equals("empty"))
+                            return 0; //nu punem semnalul de iesire pe liber pana nu il punem pe cel de intrare
+                        if (signals.get("signal7_y").getColor().equals("green") && getCurrentTrackY() != signal.getNumber())
+                            return 0;
                         //succes la punerea semanlului pe liber
                         tracks.get(0).setState("present");
                     }
@@ -286,7 +268,7 @@ public class LayoutObserver {
                 if (signal.getColor().equals("red")) {
                     if (signal.getType() == 0) {
                         tracks.get(7).setState("empty");
-                    } else if(signal.getType() == 1){
+                    } else if (signal.getType() == 1) {
                         tracks.get(0).setState("empty");
                     }
                     signals.get(stringKey.toString()).setColor("red");
@@ -297,11 +279,62 @@ public class LayoutObserver {
         return 0;
     }
 
-    public Track getTrack(int trackNumber) {
-        return tracks.get(trackNumber);
+    public void reset() {
+        /* initially all the lines are empty with 0 speed */
+        /* 0 - linie intrare, 5 - linie iesire */
+        tracks = new ArrayList<Track>();
+        for (int i = 0; i < 8; i++) {
+            tracks.add(new Track(i, 0, "forward", "empty", 0));
+        }
+        /* initially all the turnouts are on the straight way */
+        turnouts = new ArrayList<Turnout>();
+        for (int i = 0; i < 6; i++) {
+            turnouts.add(new Turnout(i + 1, 0));
+        }
+
+        signals = new HashMap<String, Signal>();
+        for (int i = 0; i < 8; i++) {
+            signals.put("signal0_x", new Signal(0, 0, "red"));
+            signals.put("signal2_x", new Signal(2, 0, "red"));
+            signals.put("signal2_y", new Signal(2, 1, "red"));
+            signals.put("signal3_x", new Signal(3, 0, "red"));
+            signals.put("signal3_y", new Signal(3, 1, "red"));
+            signals.put("signal4_x", new Signal(4, 0, "red"));
+            signals.put("signal4_y", new Signal(4, 1, "red"));
+            signals.put("signal7_y", new Signal(7, 1, "red"));
+        }
+
+        localStorageClearFlag = 0;
+        mutualExclusionX = 0;
+        mutualExclusionY = 0;
+
+        serialComm.close();
+        serialComm.initialize();
     }
 
-    public Turnout getTurnout(int turnoutNumber) {
-        return turnouts.get(turnoutNumber);
+    private int getCurrentTrackX() {
+        if (turnouts.get(0).getDirection() == 1) {
+            return 2;
+        } else {
+            if (turnouts.get(2).getDirection() == 1) return 4;
+            else return 3;
+        }
+    }
+
+    private int getCurrentTrackY() {
+        if (turnouts.get(1).getDirection() == 1) {
+            return 4;
+        } else {
+            if (turnouts.get(3).getDirection() == 1) return 2;
+            else return 3;
+        }
+    }
+
+    public int getLocalStorageClearFlag() {
+        return localStorageClearFlag;
+    }
+
+    public void setLocalStorageClearFlag(int localStorageClearFlag) {
+        this.localStorageClearFlag = localStorageClearFlag;
     }
 }

@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.async.DeferredResult;
 import ro.mit.stationmaster.dto.IRSensorDTO;
 import ro.mit.stationmaster.dto.TrackDTO;
-import ro.mit.stationmaster.layout.IRSensor;
+import ro.mit.stationmaster.trackElements.IRSensor;
 import ro.mit.stationmaster.layout.LayoutObserver;
-import ro.mit.stationmaster.layout.Signal;
-import ro.mit.stationmaster.layout.Turnout;
+import ro.mit.stationmaster.trackElements.Signal;
+import ro.mit.stationmaster.trackElements.Turnout;
 import ro.mit.stationmaster.service.SensorUpdateService;
 import ro.mit.stationmaster.utils.SerialComm;
 
@@ -46,7 +46,6 @@ public class ArduinoController {
     @ResponseBody
     public int sendTurnoutCommand(@RequestBody Turnout turnout) {
         layoutObserver.updateLayout(turnout);
-//        if(turnout.getNumber() == 1 || turnout.getNumber()==5)return 0;
         return 1;
     }
 
@@ -71,6 +70,12 @@ public class ArduinoController {
             layoutObserver.setLocalStorageClearFlag(1);
             return 0;
         } else return 1;
+    }
+
+    @RequestMapping(value = "/reset", method = RequestMethod.GET)
+    @ResponseBody
+    public void restart(){
+        layoutObserver.reset();
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -185,6 +185,8 @@
         </div>
     </div>
 
+    <button id="restart_button">Restart</button>
+
 </div>
 
 </body>

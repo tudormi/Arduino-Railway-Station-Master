@@ -5,6 +5,8 @@ import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import ro.mit.stationmaster.dto.TrackDTO;
+import ro.mit.stationmaster.trackElements.IRSensor;
+import ro.mit.stationmaster.trackElements.Turnout;
 import ro.mit.stationmaster.utils.SerialComm;
 
 /**
@@ -23,10 +25,6 @@ public class ArduinoMessageDispatcher {
 
     public void parseMessageFromArduino(String message) {
         logger.info(message);
-//        JSONObject jsonObject = new JSONObject(message);
-//        String type = jsonObject.getString("type");
-//        System.out.println(jsonObject.getString("type"));
-//        jsonObject = jsonObject.getJSONObject(type);
         parseSensorkMessage(message);
     }
 
@@ -38,18 +36,25 @@ public class ArduinoMessageDispatcher {
     }
 
     public void sendTrackMessage(TrackDTO trackDTO){
-        StringBuilder command = new StringBuilder();
-        command.append("{\"type\": \"line\",");
-        command.append("\"line\":{\"number\":");
-        command.append(trackDTO.getNumber());
-        command.append(",\"speed\":");
-        command.append(trackDTO.getSpeed());
-        command.append(",\"direction\":\"");
-        command.append(trackDTO.getDirection());
-        command.append("\"}}");
-        System.out.println(command.toString());
-        System.out.println("{\"type\": \"line\",\"line\":{\"number\":" + trackDTO.getNumber() + ",\"speed\":" + trackDTO.getSpeed() + ",\"direction\":\"" + trackDTO.getDirection()+"\"}}");
-        serialComm.sendData("{\"type\": \"line\",\"line\":{\"number\":" + trackDTO.getNumber() + ",\"speed\":" + trackDTO.getSpeed() + ",\"direction\":\"" + trackDTO.getDirection()+"\"}}");
+        JSONObject message = new JSONObject();
+        JSONObject track = new JSONObject();
+        message.put("track", track);
+        track.put("number", trackDTO.getNumber());
+        track.put("speed", trackDTO.getSpeed());
+        track.put("direction", trackDTO.getDirection());
+
+        System.out.println(message.toString());
+//        System.out.println("{\"type\": \"line\",\"line\":{\"number\":" + trackDTO.getNumber() + ",\"speed\":" + trackDTO.getSpeed() + ",\"direction\":\"" + trackDTO.getDirection()+"\"}}");
+//        serialComm.sendData("{\"type\": \"line\",\"line\":{\"number\":" + trackDTO.getNumber() + ",\"speed\":" + trackDTO.getSpeed() + ",\"direction\":\"" + trackDTO.getDirection()+"\"}}");
+        serialComm.sendData(message.toString());
     }
 
+    public void sendTurnoutMessage(Turnout turnout){
+        JSONObject message = new JSONObject();
+        JSONObject turnoutJSON = new JSONObject();
+        message.put("turnout", turnoutJSON);
+        turnoutJSON.put("number", turnout.getNumber());
+        turnoutJSON.put("direction", turnout.getDirection());
+        serialComm.sendData(message.toString());
+    }
 }

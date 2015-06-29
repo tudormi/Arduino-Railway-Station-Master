@@ -34,7 +34,61 @@ $(document).ready(function () {
     initializeSignals(7, 'y');
     updateFlags();
 
+    $('#restart_button').on('click', function(){
+        $.ajax({
+            url: '/command/reset',
+            type: 'get',
+            success: function(){
+                restartFront();
+            }
+        })
+    });
+
 });
+
+function restartFront(){
+    make_route_x = false;
+    make_route_y = false;
+    $('#track_3_x').attr('src', track_src);
+    $('#track_3_y').attr('src', track_src);
+    $('#track_3_centre').attr('src', track_src);
+    $('#track_3_x_between').attr('src', track_src);
+    $('#track_3_y_between').attr('src', track_src);
+    $('#track_5').attr('src', track_src);
+    $('#track_2').attr('src', track_src);
+    $('#track_4').attr('src', track_src);
+    $('#track_6').attr('src', track_src);
+    $('#left_turnout_2').attr('src', left_turnout_src);
+    $('#right_turnout_2').attr('src', right_turnout_src);
+    $('#left_turnout_4').attr('src', left_turnout_src);
+    $('#right_turnout_4').attr('src', right_turnout_src);
+    $('#turnout1_toggle').removeAttr('disabled').val(0);
+    $('#turnout2_toggle').removeAttr('disabled').val(0);
+    $('#turnout3_toggle').removeAttr('disabled').val(0);
+    $('#turnout4_toggle').removeAttr('disabled').val(0);
+    $('#turnout5_toggle').removeAttr('disabled').val(0);
+    $('#turnout6_toggle').removeAttr('disabled').val(0);
+
+    setSignalColorManual(0, 'x', 'red');
+    setSignalColorManual(2, 'x', 'red');
+    setSignalColorManual(2, 'y', 'red');
+    setSignalColorManual(3, 'x', 'red');
+    setSignalColorManual(3, 'y', 'red');
+    setSignalColorManual(4, 'x', 'red');
+    setSignalColorManual(4, 'y', 'red');
+    setSignalColorManual(7, 'y', 'red');
+
+    $('#track0_direction_toggle').removeAttr('disabled').val(0);
+    $('#track0_speed_control').removeAttr('disabled').val(0);
+    $('#track2_direction_toggle').removeAttr('disabled').val(0);
+    $('#track2_speed_control').removeAttr('disabled').val(0);
+    $('#track3_direction_toggle').removeAttr('disabled').val(0);
+    $('#track3_speed_control').removeAttr('disabled').val(0);
+    $('#track4_direction_toggle').removeAttr('disabled').val(0);
+    $('#track4_speed_control').removeAttr('disabled').val(0);
+    $('#track7_direction_toggle').removeAttr('disabled').val(0);
+    $('#track7_speed_control').removeAttr('disabled').val(0);
+}
 
 function updateFlags() {
     if ($('#track_3_x').attr('src') == track_src_present) make_route_x = true;
@@ -267,6 +321,7 @@ function processSensor(sensor) {
             if (sensor['orientation'] == 0) {//s-a calcat senzorul x al liniei
                 if (sensor['state'] == 'present' && sensor['counter'] == 1) { // -->
                     $('#track_3_centre').attr('src', track_src_present);
+                    $('#track_3_x_between').attr('src', track_src_present);
                     $('#track_3_x').attr('src', track_src); // eliberam intrarea
                     signal.number = 0;
                     signal.type = 0;
@@ -288,6 +343,7 @@ function processSensor(sensor) {
             } else { // s-a calcat senzorul y al liniei
                 if (sensor['state'] == 'present' && sensor['counter'] == 1) { // <--
                     $('#track_3_centre').attr('src', track_src_present);
+                    $('#track_3_y_between').attr('src', track_src_present);
                     $('#track_3_y').attr('src', track_src); // eliberam intrarea
                     signal.number = 7;
                     signal.type = 1;
@@ -315,6 +371,7 @@ function processSensor(sensor) {
                     $('#track_4').attr('src', track_src_present);
                     $('#right_turnout_4').attr('src', right_turnout_src_present);
                     $('#track_3_x').attr('src', track_src); // eliberam intrarea
+                    $('#track_3_x_between').attr('src', track_src);
                     signal.number = 0;
                     signal.type = 0;
                     signal.color = 'red';
@@ -361,10 +418,9 @@ function processSensor(sensor) {
 }
 
 function processSignal(signal) {
-
+    setSignalColor(signal);
     switch (signal.number) {
         case 0: //semnal de intrare x
-            setSignalColor(signal);
             blockRouteForPassingTrain(1);
             secureTrackForParkingTrain(getCurrentSetTrackX(), 1);
             makeParcursX();
@@ -373,12 +429,12 @@ function processSignal(signal) {
         case 2:
         case 3:
         case 4:
-            setSignalColor(signal);
             if (signal.color == 'green' || signal.color == 'yellow') {
-                setRouteForLeavingTrain(signal);
                 if (signal.type == 0) { //semnal x de iesire
+                    setRouteForLeavingTrain(signal);
                     blockRouteForPassingTrain(2);
                 } else {
+                    setRouteForLeavingTrain(signal);
                     blockRouteForPassingTrain(1);
                 }
             } else if (signal.color == 'red') {
@@ -387,7 +443,6 @@ function processSignal(signal) {
             break;
 
         case 7: //semnal de intrare y
-            setSignalColor(signal);
             blockRouteForPassingTrain(2);
             secureTrackForParkingTrain(getCurrentSetTrackY(), 0);
             makeParcursY();
@@ -411,7 +466,10 @@ function setSignalColor(signal) {
 function setSignalColorManual(number, type, color) {
     var signalId = '#signal' + number + '_' + type;
     $(signalId + ' li[color="red"] span').removeClass('fg-red').addClass('fg-grayLight');
+    $(signalId + ' li[color="green"] span').removeClass('fg-green').addClass('fg-grayLight');
+    $(signalId + ' li[color="yellow"] span').removeClass('fg-yellow').addClass('fg-grayLight');
     $(signalId + ' li[color="' + color + '"] span').removeClass('fg-grayLight').addClass('fg-' + color);
+    $(signalId).attr('state', color);
 }
 
 function getSignalColor(lineNumber, signalType) {

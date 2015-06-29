@@ -263,7 +263,8 @@
 
 #track_6{
     width: 16%;;
-    left:79%;
+    left:78%;
+    z-index: 0;
 }
 
 #station_scheme .spatiu {
@@ -293,6 +294,7 @@
 
 #left_turnout_4{
     right:13%;
+    z-index: 5;
 }
 
 #right_turnout_4{

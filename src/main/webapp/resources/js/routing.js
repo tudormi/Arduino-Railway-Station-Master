@@ -62,43 +62,39 @@ function cancelRouteForLeavingTrain(signal) {
         case 2:
             if (signal.type == 0) {
                 uncolorizeTrack(7, 1);
-                secureTrackForParkingTrain(2, 1);
                 unblockTurnoutsForFreeTracks();
+                secureTrackForParkingTrain(2, 1);
             }
             else {
-                secureTrackForParkingTrain(2, 0);
                 uncolorizeTrack(0, 0);
                 unblockTurnoutsForFreeTracks();
+                secureTrackForParkingTrain(2, 0);
             }
             break;
 
         case 3:
             if (signal.type == 0) {
                 uncolorizeTrack(7, 1);
-                secureTrackForParkingTrain(3, 1);
                 unblockTurnoutsForFreeTracks();
-
+                secureTrackForParkingTrain(3, 1);
             }
             else {
-                secureTrackForParkingTrain(3, 0);
                 uncolorizeTrack(0, 0);
                 unblockTurnoutsForFreeTracks();
-
+                secureTrackForParkingTrain(3, 0);
             }
             break;
 
         case 4:
             if (signal.type == 0) {
                 uncolorizeTrack(7, 1);
-                secureTrackForParkingTrain(4, 1);
                 unblockTurnoutsForFreeTracks();
-
+                secureTrackForParkingTrain(4, 1);
             }
             else {
-                secureTrackForParkingTrain(4, 0);
                 uncolorizeTrack(0, 0);
                 unblockTurnoutsForFreeTracks();
-
+                secureTrackForParkingTrain(4, 0);
             }
             break;
     }
@@ -181,20 +177,51 @@ function colorizeTrackAsRouteForLeavingTrain(trackNumber, signalType) {
     switch (trackNumber) {
         case 2:
             if (signalType == 0) {
-                $('#right_turnout_2').attr('src', right_turnout_src_present);
-                $('#track_3_y_between').attr('src', track_src_present);
+                if($('#track_2').attr('src') == track_src_present) {
+                    $('#right_turnout_2').attr('src', right_turnout_src_present);
+                    $('#track_3_y_between').attr('src', track_src_present);
+                }
+                else {
+                    $('#right_turnout_2').attr('src', right_turnout_src_route);
+                    $('#track_3_y_between').attr('src', track_src_route);
+                }
             }
-            else $('#left_turnout_2').attr('src', left_turnout_src_present);
+            else {
+                if($('#track_2').attr('src') == track_src_present) $('#left_turnout_2').attr('src', left_turnout_src_present);
+                else  $('#left_turnout_2').attr('src', left_turnout_src_route);
+            }
             break;
         case 3:
-            if (signalType == 0) $('#track_3_y_between').attr('src', track_src_present);
-            else $('#track_3_x_between').attr('src', track_src_present);
+            if (signalType == 0) {
+                if($('#track_3_centre').attr('src') == track_src_present){
+                    $('#track_3_y_between').attr('src', track_src_present);
+                } else {
+                    $('#track_3_y_between').attr('src', track_src_route);
+                }
+            }
+            else {
+                if($('#track_3_centre').attr('src') == track_src_present) {
+                    $('#track_3_x_between').attr('src', track_src_present);
+                } else {
+                    $('#track_3_x_between').attr('src', track_src_route);
+                }
+            }
             break;
         case 4:
-            if (signalType == 0) $('#left_turnout_4').attr('src', left_turnout_src_present);
+            if (signalType == 0) {
+                if($('#track_4').attr('src') == track_src_present){
+                    $('#left_turnout_4').attr('src', left_turnout_src_present);
+                } else $('#left_turnout_4').attr('src', left_turnout_src_route);
+            }
             else {
-                $('#right_turnout_4').attr('src', right_turnout_src_present);
-                $('#track_3_x_between').attr('src', track_src_present);
+                if($('#track_4').attr('src') == track_src_present){
+                    $('#right_turnout_4').attr('src', right_turnout_src_present);
+                    $('#track_3_x_between').attr('src', track_src_present);
+                }
+                else {
+                    $('#right_turnout_4').attr('src', right_turnout_src_route);
+                    $('#track_3_x_between').attr('src', track_src_route);
+                }
             }
             break;
     }
@@ -306,7 +333,7 @@ function secureTrackForParkingTrain(trackNumber, directionToBlock) {
 
         case 4:
             if (directionToBlock == 0) {//trenul vine dinspre y, blocam x-ul
-                if ($('#track_3_centre').attr('src', track_src_present)) {
+                if ($('#track_3_centre').attr('src') == track_src_present) {
                     changeTurnout(1, 1);
                     $('#turnout1_toggle').attr('disabled', 'disabled');
                 }

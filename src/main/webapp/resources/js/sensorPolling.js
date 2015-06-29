@@ -33,11 +33,9 @@ function getSensorUpdate() {
     request.done(function (sensor) {
         processSensor(sensor);
     });
-
     request.fail(function (jqXHR, textStatus, errorThrown) {
         console.log("Polling - the following error occured: " + textStatus, errorThrown);
     });
-
     request.always(function () {
         allow = true;
     });
