@@ -1,4 +1,4 @@
-package ro.mit.stationmaster.layout;
+package ro.mit.stationmaster.trackElements;
 
 /**
  * Created by Tudormi on 15/5/2015.
