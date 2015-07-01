@@ -22,7 +22,7 @@ public class SerialComm implements SerialPortEventListener {
 
     SerialPort serialPort = null;
 
-    private static final String PORT_NAMES[] = {"COM3"};
+    private static final String PORT_NAMES[] = {"COM4", "COM6", "COM8"};
 
     private static final String appName = "StationMaster";
     private BufferedReader input;
@@ -104,7 +104,7 @@ public class SerialComm implements SerialPortEventListener {
                         input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
                     }
                     String inputLine = input.readLine();
-//                    arduinoMessageDispatcher.parseMessageFromArduino(inputLine);
+                    arduinoMessageDispatcher.parseMessageFromArduino(inputLine);
                     System.out.println(inputLine);
                     break;
 

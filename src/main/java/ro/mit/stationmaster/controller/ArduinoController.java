@@ -45,7 +45,7 @@ public class ArduinoController {
     @RequestMapping(value = "/turnout", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public int sendTurnoutCommand(@RequestBody Turnout turnout) {
-        layoutObserver.updateLayout(turnout);
+//        layoutObserver.updateLayout(turnout);
         return 1;
     }
 

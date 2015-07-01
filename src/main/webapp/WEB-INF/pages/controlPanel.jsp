@@ -126,9 +126,9 @@
     </div>
 
     <div class="track_control">
-        <h3 class="track_title">Entrance</h3>
+        <h3 class="track_title">Speed</h3>
         <div class="track_direction_toggle_wrapper">
-            <p> B</p>
+            <p>B</p>
             <div id="track0_direction_toggle" class="track_toggle" trackNumber="0"></div>
             <p>F</p>
         </div>
@@ -137,55 +137,7 @@
         </div>
     </div>
 
-    <div class="track_control">
-        <h3 class="track_title">Track 2</h3>
-        <div class="track_direction_toggle_wrapper">
-            <p> B</p>
-            <div id="track2_direction_toggle" class="track_toggle" trackNumber="2"></div>
-            <p>F</p>
-        </div>
-        <div class="track_speed_control_wrapper">
-            <div id="track2_speed_control" class="speed_controller" trackNumber="2"></div>
-        </div>
-    </div>
-
-    <div class="track_control">
-        <h3 class="track_title">Track 3</h3>
-        <div class="track_direction_toggle_wrapper">
-            <p>B</p>
-            <div id="track3_direction_toggle" class="track_toggle" trackNumber="3"></div>
-            <p>F</p>
-        </div>
-        <div class="track_speed_control_wrapper">
-            <div id="track3_speed_control" class="speed_controller" trackNumber="3"></div>
-        </div>
-    </div>
-
-    <div class="track_control">
-        <h3 class="track_title">Track 4</h3>
-        <div class="track_direction_toggle_wrapper">
-            <p>B</p>
-            <div id="track4_direction_toggle" class="track_toggle" trackNumber="4"></div>
-            <p>F</p>
-        </div>
-        <div class="track_speed_control_wrapper">
-            <div id="track4_speed_control" class="speed_controller" trackNumber="4"></div>
-        </div>
-    </div>
-
-    <div class="track_control">
-        <h3 class="track_title">Exit</h3>
-        <div class="track_direction_toggle_wrapper">
-            <p> B</p>
-            <div id="track7_direction_toggle" class="track_toggle" trackNumber="7"></div>
-            <p>F</p>
-        </div>
-        <div class="track_speed_control_wrapper">
-            <div id="track7_speed_control" class="speed_controller" trackNumber="7"></div>
-        </div>
-    </div>
-
-    <button id="restart_button">Restart</button>
+    <img src="resources/images/train_deco.jpg" id="deco">
 
 </div>
 

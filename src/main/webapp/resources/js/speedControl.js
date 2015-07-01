@@ -79,7 +79,7 @@ $(document).ready(function () {
         $('#track' + trackNumber + '_speed_control').val(0);
     };
 
-    $('.direction_toggler').on('slide', function (event) {
+    $('.track_toggle').on('slide', function (event) {
         /* forward = 1, backward = 0 */
         var trackNumber = Number($(this).attr('trackNumber'));
         if (Number($(this).val()) === 1) {

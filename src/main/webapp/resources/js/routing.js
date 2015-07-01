@@ -110,10 +110,10 @@ function colorizeTrackAsRouteForEnteringTrain(turnoutNumber) {
         case 1:
         case 3:
         case 5:
-            if ($('#track_2').attr('src') != track_src_present && (make_route_y == false || lineNumberY != 2)) uncolorizeTrack(2, 0);
+            if ($('#track_2').attr('src') != track_src_present_loco && (make_route_y == false || lineNumberY != 2)) uncolorizeTrack(2, 0);
             else $('#left_turnout_2').attr('src', left_turnout_src);
-            if ($('#track_3_centre').attr('src') != track_src_present && (make_route_y == false || lineNumberY != 3)) uncolorizeTrack(3, 0);
-            if ($('#track_4').attr('src') != track_src_present && (make_route_y == false || lineNumberY != 4)) uncolorizeTrack(4, 0);
+            if ($('#track_3_centre').attr('src') != track_src_present_loco && (make_route_y == false || lineNumberY != 3)) uncolorizeTrack(3, 0);
+            if ($('#track_4').attr('src') != track_src_present_loco && (make_route_y == false || lineNumberY != 4)) uncolorizeTrack(4, 0);
             else $('#right_turnout_4').attr('src', right_turnout_src);
             colorizeTrackAsRoute(lineNumberX, 0);
             break;
@@ -121,10 +121,10 @@ function colorizeTrackAsRouteForEnteringTrain(turnoutNumber) {
         case 2:
         case 4:
         case 6:
-            if ($('#track_2').attr('src') != track_src_present && (make_route_x == false || lineNumberX != 2)) uncolorizeTrack(2, 1);
+            if ($('#track_2').attr('src') != track_src_present_loco && (make_route_x == false || lineNumberX != 2)) uncolorizeTrack(2, 1);
             else $('#right_turnout_2').attr('src', right_turnout_src);
-            if ($('#track_3_centre').attr('src') != track_src_present && (make_route_x == false || lineNumberX != 3)) uncolorizeTrack(3, 1);
-            if ($('#track_4').attr('src') != track_src_present && (make_route_x == false || lineNumberX != 4)) uncolorizeTrack(4, 1);
+            if ($('#track_3_centre').attr('src') != track_src_present_loco && (make_route_x == false || lineNumberX != 3)) uncolorizeTrack(3, 1);
+            if ($('#track_4').attr('src') != track_src_present_loco && (make_route_x == false || lineNumberX != 4)) uncolorizeTrack(4, 1);
             else $('#left_turnout_4').attr('src', left_turnout_src);
             colorizeTrackAsRoute(lineNumberY, 1);
             break;
@@ -177,9 +177,9 @@ function colorizeTrackAsRouteForLeavingTrain(trackNumber, signalType) {
     switch (trackNumber) {
         case 2:
             if (signalType == 0) {
-                if($('#track_2').attr('src') == track_src_present) {
+                if($('#track_2').attr('src') == track_src_present_loco) {
                     $('#right_turnout_2').attr('src', right_turnout_src_present);
-                    $('#track_3_y_between').attr('src', track_src_present);
+                    $('#track_3_y_between').attr('src', track_src_present_loco);
                 }
                 else {
                     $('#right_turnout_2').attr('src', right_turnout_src_route);
@@ -187,21 +187,21 @@ function colorizeTrackAsRouteForLeavingTrain(trackNumber, signalType) {
                 }
             }
             else {
-                if($('#track_2').attr('src') == track_src_present) $('#left_turnout_2').attr('src', left_turnout_src_present);
+                if($('#track_2').attr('src') == track_src_present_loco) $('#left_turnout_2').attr('src', left_turnout_src_present);
                 else  $('#left_turnout_2').attr('src', left_turnout_src_route);
             }
             break;
         case 3:
             if (signalType == 0) {
-                if($('#track_3_centre').attr('src') == track_src_present){
-                    $('#track_3_y_between').attr('src', track_src_present);
+                if($('#track_3_centre').attr('src') == track_src_present_loco){
+                    $('#track_3_y_between').attr('src', track_src_present_loco);
                 } else {
                     $('#track_3_y_between').attr('src', track_src_route);
                 }
             }
             else {
-                if($('#track_3_centre').attr('src') == track_src_present) {
-                    $('#track_3_x_between').attr('src', track_src_present);
+                if($('#track_3_centre').attr('src') == track_src_present_loco) {
+                    $('#track_3_x_between').attr('src', track_src_present_loco);
                 } else {
                     $('#track_3_x_between').attr('src', track_src_route);
                 }
@@ -209,14 +209,14 @@ function colorizeTrackAsRouteForLeavingTrain(trackNumber, signalType) {
             break;
         case 4:
             if (signalType == 0) {
-                if($('#track_4').attr('src') == track_src_present){
+                if($('#track_4').attr('src') == track_src_present_loco){
                     $('#left_turnout_4').attr('src', left_turnout_src_present);
                 } else $('#left_turnout_4').attr('src', left_turnout_src_route);
             }
             else {
-                if($('#track_4').attr('src') == track_src_present){
+                if($('#track_4').attr('src') == track_src_present_loco){
                     $('#right_turnout_4').attr('src', right_turnout_src_present);
-                    $('#track_3_x_between').attr('src', track_src_present);
+                    $('#track_3_x_between').attr('src', track_src_present_loco);
                 }
                 else {
                     $('#right_turnout_4').attr('src', right_turnout_src_route);
@@ -333,7 +333,7 @@ function secureTrackForParkingTrain(trackNumber, directionToBlock) {
 
         case 4:
             if (directionToBlock == 0) {//trenul vine dinspre y, blocam x-ul
-                if ($('#track_3_centre').attr('src') == track_src_present) {
+                if ($('#track_3_centre').attr('src') == track_src_present_loco) {
                     changeTurnout(1, 1);
                     $('#turnout1_toggle').attr('disabled', 'disabled');
                 }

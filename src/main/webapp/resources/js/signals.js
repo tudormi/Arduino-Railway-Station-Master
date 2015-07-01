@@ -7,6 +7,7 @@ var left_turnout_src_route = 'resources/images/left_switch_route.png',
     left_turnout_src = 'resources/images/left_switch_empty.png',
     track_src = 'resources/images/track_empty.png',
     track_src_route = 'resources/images/track_route.png',
+    track_src_present_loco = 'resources/images/track_present_loco.png',
     track_src_present = 'resources/images/track_present.png',
     right_turnout_src_route = 'resources/images/right_switch_route.png',
     right_turnout_src = 'resources/images/right_switch_empty.png',
@@ -91,8 +92,8 @@ function restartFront(){
 }
 
 function updateFlags() {
-    if ($('#track_3_x').attr('src') == track_src_present) make_route_x = true;
-    if ($('#track_3_y').attr('src') == track_src_present) make_route_y = true;
+    if ($('#track_3_x').attr('src') == track_src_present_loco) make_route_x = true;
+    if ($('#track_3_y').attr('src') == track_src_present_loco) make_route_y = true;
 }
 
 function initializeSignals(signalNumber, signalType) {
@@ -140,13 +141,13 @@ function changeSignal(signal, processFlag) {
 function checkIfLineIsOccupied(trackNumber) {
     switch (trackNumber) {
         case 3:
-            if ($('#track_3_centre').attr('src') == track_src_present) return true;
+            if ($('#track_3_centre').attr('src') == track_src_present_loco) return true;
             else return false;
         case 4:
-            if ($('#track_4').attr('src') == track_src_present) return true;
+            if ($('#track_4').attr('src') == track_src_present_loco) return true;
             else return false;
         case 2:
-            if ($('#track_2').attr('src') == track_src_present) return true;
+            if ($('#track_2').attr('src') == track_src_present_loco) return true;
             else return false;
     }
 }
@@ -154,19 +155,19 @@ function checkIfLineIsOccupied(trackNumber) {
 function markLineAsOccupied(trackNumber) {
     switch (trackNumber) {
         case 0:
-            $('#track_3_x').attr('src', track_src_present);
+            $('#track_3_x').attr('src', track_src_present_loco);
             break;
         case 2:
-            $('#track_2').attr('src', track_src_present);
+            $('#track_2').attr('src', track_src_present_loco);
             break;
         case 3:
-            $('#track_3_centre').attr('src', track_src_present);
+            $('#track_3_centre').attr('src', track_src_present_loco);
             break;
         case 4:
-            $('#track_4').attr('src', track_src_present);
+            $('#track_4').attr('src', track_src_present_loco);
             break;
         case 7:
-            $('#track_3_y').attr('src', track_src_present);
+            $('#track_3_y').attr('src', track_src_present_loco);
             break;
     }
 }
@@ -271,7 +272,7 @@ function processSensor(sensor) {
             if (sensor['orientation'] == 0) {//s-a calcat senzorul x al liniei
                 if (sensor['state'] == 'present' && sensor['counter'] == 1) { // -->
                     $('#left_turnout_2').attr('src', left_turnout_src_present);
-                    $('#track_2').attr('src', track_src_present);
+                    $('#track_2').attr('src', track_src_present_loco);
                     $('#track_3_x').attr('src', track_src); // eliberam intrarea
                     signal.number = 0;
                     signal.type = 0;
@@ -294,7 +295,7 @@ function processSensor(sensor) {
             } else { // s-a calcat senzorul y al liniei
                 if (sensor['state'] == 'present' && sensor['counter'] == 1) { // <--
                     $('#right_turnout_2').attr('src', right_turnout_src_present);
-                    $('#track_2').attr('src', track_src_present);
+                    $('#track_2').attr('src', track_src_present_loco);
                     $('#track_3_y').attr('src', track_src); //eliberam iesirea
                     signal.number = 7;
                     signal.type = 1;
@@ -320,7 +321,7 @@ function processSensor(sensor) {
 
             if (sensor['orientation'] == 0) {//s-a calcat senzorul x al liniei
                 if (sensor['state'] == 'present' && sensor['counter'] == 1) { // -->
-                    $('#track_3_centre').attr('src', track_src_present);
+                    $('#track_3_centre').attr('src', track_src_present_loco);
                     $('#track_3_x_between').attr('src', track_src_present);
                     $('#track_3_x').attr('src', track_src); // eliberam intrarea
                     signal.number = 0;
@@ -330,7 +331,6 @@ function processSensor(sensor) {
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // <-- vine dinspre y, trenul a ajuns la senzorul dinainte de semnal
                     $('#track_3_y_between').attr('src', track_src);
                     if (getSignalColor(3, 'y') == 'red') {  //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
-                        console.log('semnal pe rosu');
                         speedOperation.sendValue(0, 3);
                         $('#track3_speed_control').val(0);
                         $('#track3_speed_control').attr('disabled', 'disabled');
@@ -342,7 +342,7 @@ function processSensor(sensor) {
                 }
             } else { // s-a calcat senzorul y al liniei
                 if (sensor['state'] == 'present' && sensor['counter'] == 1) { // <--
-                    $('#track_3_centre').attr('src', track_src_present);
+                    $('#track_3_centre').attr('src', track_src_present_loco);
                     $('#track_3_y_between').attr('src', track_src_present);
                     $('#track_3_y').attr('src', track_src); // eliberam intrarea
                     signal.number = 7;
@@ -351,7 +351,7 @@ function processSensor(sensor) {
                     changeSignal(signal); //se elibereaza semnalul de intrare
                 } else if (sensor['state'] == 'present' && sensor['counter'] == 0) { // --> vine dinspre x, trenul a ajuns la senzorul dinainte de semnal
                     if (getSignalColor(3, 'x') == 'red') { //se verifica semnalul ce culoare are. daca e rosu se opreste punand viteza pe 0
-                        console.log('semnal pe rosu');
+                        $('#track_3_x_between').attr('src', track_src);
                         $('#track3_speed_control').val();
                         speedOperation.sendValue(0, 3);
                         $('#track3_speed_control').attr('disabled', 'disabled');
@@ -368,7 +368,7 @@ function processSensor(sensor) {
 
             if (sensor['orientation'] == 0) {//s-a calcat senzorul x al liniei
                 if (sensor['state'] == 'present' && sensor['counter'] == 1) { // -->
-                    $('#track_4').attr('src', track_src_present);
+                    $('#track_4').attr('src', track_src_present_loco);
                     $('#right_turnout_4').attr('src', right_turnout_src_present);
                     $('#track_3_x').attr('src', track_src); // eliberam intrarea
                     $('#track_3_x_between').attr('src', track_src);
@@ -391,7 +391,7 @@ function processSensor(sensor) {
                 }
             } else { // s-a calcat senzorul y al liniei
                 if (sensor['state'] == 'present' && sensor['counter'] == 1) { // <--
-                    $('#track_4').attr('src', track_src_present);
+                    $('#track_4').attr('src', track_src_present_loco);
                     $('#left_turnout_4').attr('src', left_turnout_src_present);
                     $('#track_3_y').attr('src', track_src); // eliberam intrarea
                     signal.number = 7;
@@ -424,6 +424,7 @@ function processSignal(signal) {
             blockRouteForPassingTrain(1);
             secureTrackForParkingTrain(getCurrentSetTrackX(), 1);
             makeParcursX();
+            $('#track0_speed_control').removeAttr('disabled');
             break;
 
         case 2:
@@ -446,6 +447,7 @@ function processSignal(signal) {
             blockRouteForPassingTrain(2);
             secureTrackForParkingTrain(getCurrentSetTrackY(), 0);
             makeParcursY();
+            $('#track0_speed_control').removeAttr('disabled');
             break;
     }
 
